@@ -1941,7 +1941,7 @@ char *__d_path(const struct path *path, struct path *root,
 	char *end = buffer + buflen;
 	char *retval;
 
-	spin_lock(&vfsmount_lock);
+	br_read_lock(vfsmount_lock);
 	prepend(&end, &buflen, "\0", 1);
 	if (d_unlinked(dentry) &&
 		(prepend(&end, &buflen, " (deleted)", 10) != 0))
@@ -1977,7 +1977,7 @@ char *__d_path(const struct path *path, struct path *root,
 	}
 
 out:
-	spin_unlock(&vfsmount_lock);
+	br_read_unlock(vfsmount_lock);
 	return retval;
 
 global_root:
@@ -2208,11 +2208,12 @@ int path_is_under(struct path *path1, struct path *path2)
 	struct vfsmount *mnt = path1->mnt;
 	struct dentry *dentry = path1->dentry;
 	int res;
-	spin_lock(&vfsmount_lock);
+
+	br_read_lock(vfsmount_lock);
 	if (mnt != path2->mnt) {
 		for (;;) {
 			if (mnt->mnt_parent == mnt) {
-				spin_unlock(&vfsmount_lock);
+				br_read_unlock(vfsmount_lock);
 				return 0;
 			}
 			if (mnt->mnt_parent == path2->mnt)
@@ -2222,7 +2223,7 @@ int path_is_under(struct path *path1, struct path *path2)
 		dentry = mnt->mnt_mountpoint;
 	}
 	res = is_subdir(dentry, path2->dentry);
-	spin_unlock(&vfsmount_lock);
+	br_read_unlock(vfsmount_lock);
 	return res;
 }
 EXPORT_SYMBOL(path_is_under);
