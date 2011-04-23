@@ -706,7 +706,8 @@ service media /system/bin/mediaserver
     ioprio rt 4
 
 
-service samsungani /system/bin/samsungani
+#service samsungani /system/bin/samsungani
+service samsungani /system/bin/bootanimation
     user graphics
     group graphics
     disabled
