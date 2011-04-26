@@ -43,6 +43,7 @@ on early-fs
 
 on fs
     mount tmpfs tmpfs /tmp
+    mount ext4 /dev/block/stl9 /system
     mount rfs /dev/block/stl9 /system check=no
 
 # SEC_DMCRYPT for MC_CRYPT_ROOT before apply_disk_policy or apply_sec_devenc_init
@@ -55,7 +56,7 @@ on fs
     exec apply_disk_policy
 
 on post-fs
-    #mount rootfs rootfs / ro remount
+    mount rootfs rootfs / ro remount
 
     write /proc/sys/kernel/panic_on_oops 1
     write /proc/sys/kernel/hung_task_timeout_secs 0
@@ -67,9 +68,6 @@ on post-fs
 	
 on boot
 
-    setprop persist.service.adb.enable 1
-    setprop ro.secure 0
-
     ifup lo
     hostname localhost
     domainname localdomain
@@ -79,15 +77,13 @@ on boot
 service ueventd /sbin/ueventd
     critical
 
-service console /system/bin/sh
+service console /sbin/ext/busybox sh
     console
 
-#service recovery /sbin/recovery
-service recovery /cwm/go.sh
-	oneshot
+service recovery /sbin/recovery-loader
 
-service adbd /sbin/adbd recovery
-	disabled
+service adbd /sbin/adbd
+    enabled
 
 on property:persist.service.adb.enable=1
     start adbd
