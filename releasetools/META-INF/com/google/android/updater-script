@@ -1,6 +1,6 @@
 ui_print("Welcome to Talon...");
 show_progress(0.1, 10);
-uii_print("Extracting the necessary tools\nto flash the kernel...");
+ui_print("Extracting the necessary tools\nto flash the kernel...");
 package_extract_file("bmlwrite", "/tmp/bmlwrite");
 package_extract_file("zImage", "/tmp/zImage");
 set_perm(0, 0, 0755, "/tmp/bmlwrite");
