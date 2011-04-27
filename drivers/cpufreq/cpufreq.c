@@ -665,7 +665,7 @@ static ssize_t store_UV_mV_table(struct cpufreq_policy *policy,
 
 	unsigned int ret = -EINVAL;
 
-	ret = sscanf(buf, "%d %d %d %d %d %d", &exp_UV_mV[0], &exp_UV_mV[1], &exp_UV_mV[2], &exp_UV_mV[3], &exp_UV_mV[4] &exp_UV_mV[5]);
+	ret = sscanf(buf, "%d %d %d %d %d %d", &exp_UV_mV[0], &exp_UV_mV[1], &exp_UV_mV[2], &exp_UV_mV[3], &exp_UV_mV[4], &exp_UV_mV[5]);
 	if(ret != 1) {
 		return -EINVAL;
 	}
