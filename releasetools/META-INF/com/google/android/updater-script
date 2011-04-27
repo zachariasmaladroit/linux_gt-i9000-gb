@@ -1,11 +1,10 @@
-show_progress(0.1, 0);
-ui_print("Welcome to Talon.");
+ui_print("Welcome to Talon...");
+show_progress(0.1, 10);
+uii_print("Extracting the necessary tools\nto flash the kernel...");
+package_extract_file("bmlwrite", "/tmp/bmlwrite");
+package_extract_file("zImage", "/tmp/zImage");
+set_perm(0, 0, 0755, "/tmp/bmlwrite");
 ui_print("Flashing kernel...");
-package_extract_dir("updates", "/tmp/updates");
-set_perm(0, 0, 755 "/tmp/updates/redbend_ua");
-run_program("/tmp/updates/redbend_ua", "restore", "/tmp/updates/zImage", "/dev/block/bml7");
-show_progress(0.2, 50);
-ui_print("Setting permissions on init.d...");
-set_perm_recursive(0, 2000, 0755, 0755, "/system/etc/init.d");
-ui_print("Please reboot your phone.");
-show_progress(0.3, 100);
+run_program("/tmp/bmlwrite", "/tmp/zImage", "/dev/block/bml7");
+ui_print("Done. Please reboot.");
+
