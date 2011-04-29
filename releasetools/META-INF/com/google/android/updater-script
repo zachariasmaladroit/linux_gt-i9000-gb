@@ -6,5 +6,6 @@ package_extract_file("zImage", "/tmp/zImage");
 set_perm(0, 0, 0755, "/tmp/bmlwrite");
 ui_print("Flashing kernel...");
 run_program("/tmp/bmlwrite", "/tmp/zImage", "/dev/block/bml7");
+set_perm_recursive(0, 2000, 0755, 0755, "/system/etc/init.d");
 ui_print("Done. Please reboot.");
 
