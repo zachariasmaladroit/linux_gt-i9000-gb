@@ -644,7 +644,8 @@ struct signal_struct {
        struct rw_semaphore threadgroup_fork_lock;
 #endif
 
-	int oom_adj;	/* OOM kill score adjustment (bit shift) */
+  int oom_adj;    /* OOM kill score adjustment (bit shift) */
+  int oom_score_adj;  /* OOM kill score adjustment */
 };
 
 /* Context switch must be unlocked if interrupts are to be enabled */
