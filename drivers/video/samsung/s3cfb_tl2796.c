@@ -213,9 +213,6 @@ static void update_brightness(struct s5p_lcd *lcd)
 #ifdef CONFIG_FB_S3C_TL2796_ACL
 	update_acl(lcd);
 #endif
-	if (lcd->on_19gamma)
-		s6e63m0_panel_send_sequence(lcd, pdata->gamma19_table[gamma_value]);
-	else
 		s6e63m0_panel_send_sequence(lcd, pdata->gamma22_table[gamma_value]);
 
 	s6e63m0_panel_send_sequence(lcd, pdata->gamma_update);
