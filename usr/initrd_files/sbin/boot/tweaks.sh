@@ -69,7 +69,7 @@ fi;
 if [ $(getprop $TWEAK_SDCARD) = "enabled" ]; then
   # SDcard speed tweak
   for i in $(ls -1 /sys/devices/platform/s3c-sdhci.*/mmc_host/mmc*/mmc*/block/*/queue/read_ahead_kb); do 
-    echo 3072 > $i; 
+    echo 1024 > $i; 
   done;
 fi;
 
