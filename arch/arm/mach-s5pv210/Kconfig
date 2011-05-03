@@ -193,6 +193,12 @@ config S5P_ADC
 	help
 	  ADC ( A/D Conversion ) driver for Samsung S5PXXXX
 
+config S5P_BIGMEM
+       bool "select Bigmem memory config"
+       default n
+       help 
+         Enable 353MB memory config. Breaks 720p recording
+          
 config S5PV210_SETUP_FIMC0
 	bool
 	depends on VIDEO_FIMC
