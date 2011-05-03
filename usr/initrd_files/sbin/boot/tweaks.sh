@@ -96,7 +96,7 @@ fi;
 
 if [ $(getprop $TWEAK_MINFREE) = "enabled" ]; then
   if [ -e /sys/module/lowmemorykiller/parameters/minfree ]; then
-    echo "2560,4096,6144,17408,19456,23552" > /sys/module/lowmemorykiller/parameters/minfree
+    echo "2560,4096,6144,7680,11264,12288" > /sys/module/lowmemorykiller/parameters/minfree
   fi;
 fi;
 
