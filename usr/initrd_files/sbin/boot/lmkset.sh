@@ -22,6 +22,11 @@
 #  4: kodos (maximum multitasking)
 #  5: kodos (experimental)
 
+PRESET_DEFAULT=2
+
+#if used with CF-Root Tweaks app, the preset enabled by the "min-free tweak"
+PRESET_TWEAK=3
+
 if [ -e /data/local/lmk_user ]; then
  source /data/local/lmk_user
 fi;
@@ -187,11 +192,19 @@ PRESET_5_Mmap_4=4
 PRESET_5_Mmap_5=8
 PRESET_5_Mmap_6=9
 
-if [ "$(getprop persist.lmkset.preset)" == "" ]; then
- setprop persist.lmkset.preset 2
+getprop > /data/lmklog
+
+if [ "$(getprop persist.tweak.minfree)" == "enabled" ]; then
+ setprop persist.lmkset.preset $PRESET_TWEAK
+elif [ "$(getprop persist.tweak.minfree)" == "disabled" -a "$(getprop persist.lmkset.preset)" == "$PRESET_TWEAK" ]; then
+ setprop persist.lmkset.preset $PRESET_DEFAULT
 fi;
 
-PRESET=`getprop persist.lmkset.preset`
+if [ "$(getprop persist.lmkset.preset)" == "" ]; then
+ PRESET=$PRESET_DEFAULT
+else
+ PRESET=`getprop persist.lmkset.preset`
+fi;
 
 eval export set LMKSET_ADJ_1=\${"PRESET_${PRESET}_ADJ_1"}
 eval export set LMKSET_ADJ_2=\${"PRESET_${PRESET}_ADJ_2"}

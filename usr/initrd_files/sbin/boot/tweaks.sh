@@ -13,9 +13,6 @@ TWEAK_GOVERNOR_CONSERVATIVE="$TWEAK_BASE.gov_conservative";
 TWEAK_SCHEDULER_DEADLINE="$TWEAK_BASE.sched_deadline";
 TWEAK_TOUCHSCREEN="$TWEAK_BASE.touchscreen";
 
-LMK_PRESET_DEFAULT=2
-LMK_PRESET_TWEAK=3
-
 for i in $TWEAK_IO $TWEAK_NOATIME $TWEAK_VM_SWAPPINESS $TWEAK_VM_DIRTY $TWEAK_SCHEDULER $TWEAK_MINFREE $TWEAK_SDCARD; do
   if [ "$(getprop $i)" = "" ]; then
     setprop $i enabled;
@@ -95,14 +92,6 @@ if [ $(getprop $TWEAK_SCHEDULER) = "enabled" ]; then
   echo "18000000" > /proc/sys/kernel/sched_latency_ns
   echo "3000000" > /proc/sys/kernel/sched_wakeup_granularity_ns
   echo "1500000" > /proc/sys/kernel/sched_min_granularity_ns
-fi;
-
-if [ $(getprop $TWEAK_MINFREE) = "enabled" ]; then
-  setprop persist.lmkset.preset $LMK_PRESET_TWEAK
-else
-  if [ $(getprop persist.lmkset.preset) == $LMK_PRESET_TWEAK ]; then
-    setprop persist.lmkset.preset $LMK_PRESET_DEFAULT
-  fi;
 fi;
 
 if [ $(getprop $TWEAK_STAGEFRIGHT) = "enabled" ]; then
