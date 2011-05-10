@@ -5,8 +5,8 @@
 # getprop/setprop) used by the android framework, keeping them in synch with each other.
 #
 # Users shoudln't modify or call this script directly - you can choose a preset by doing
-# 'setprop persist.lmkset.preset <preset #>', then rebooting to apply. A user-defined 
-# preset can be defined in lmk_user (see that file for details).
+# 'setprop persist.lmkset.preset <preset #>' as root, then rebooting to apply. A 
+# user-defined preset can be defined in lmk_user (see that file for details).
 #
 # Currently the script defaults to preset 2, as these are the only stock settings I've 
 # been able to find which don't appear to have been hacked at by a drunken monkey.
@@ -19,8 +19,6 @@
 #  1: JVB stock settings (kind of)
 #  2: JV1/Nexus S stock settings
 #  3: kodos
-#  4: kodos (maximum multitasking)
-#  5: kodos (experimental)
 
 PRESET_DEFAULT=2
 
@@ -99,100 +97,34 @@ PRESET_2_Mmap_6=9
 #3: kodos
 PRESET_3_ADJ_1=0
 PRESET_3_ADJ_2=1
-PRESET_3_ADJ_3=1
-PRESET_3_ADJ_4=2
-PRESET_3_ADJ_5=3
-PRESET_3_ADJ_6=4
-PRESET_3_ADJ_7=5
-PRESET_3_ADJ_8=6
+PRESET_3_ADJ_3=2
+PRESET_3_ADJ_4=3
+PRESET_3_ADJ_5=4
+PRESET_3_ADJ_6=5
+PRESET_3_ADJ_7=6
+PRESET_3_ADJ_8=7
 PRESET_3_ADJ_9=15
 PRESET_3_MEM_1=2048
-PRESET_3_MEM_2=2304
-PRESET_3_MEM_3=2816
-PRESET_3_MEM_4=3072
-PRESET_3_MEM_5=3840
-PRESET_3_MEM_6=4352
-PRESET_3_MEM_7=5376
+PRESET_3_MEM_2=3072
+PRESET_3_MEM_3=4096
+PRESET_3_MEM_4=4096
+PRESET_3_MEM_5=6144
+PRESET_3_MEM_6=6144
+PRESET_3_MEM_7=6144
 PRESET_3_MEM_8=6400
-PRESET_3_MEM_9=15360
+PRESET_3_MEM_9=8192
 PRESET_3_Amap_1=1
 PRESET_3_Amap_2=2
-PRESET_3_Amap_3=4
-PRESET_3_Amap_4=6
+PRESET_3_Amap_3=3
+PRESET_3_Amap_4=5
 PRESET_3_Amap_5=8
 PRESET_3_Amap_6=9
 PRESET_3_Mmap_1=1
 PRESET_3_Mmap_2=2
 PRESET_3_Mmap_3=3
-PRESET_3_Mmap_4=7
+PRESET_3_Mmap_4=5
 PRESET_3_Mmap_5=8
 PRESET_3_Mmap_6=9
-
-#4: kodos (maximum multitasking)
-PRESET_4_ADJ_1=0
-PRESET_4_ADJ_2=1
-PRESET_4_ADJ_3=1
-PRESET_4_ADJ_4=2
-PRESET_4_ADJ_5=2
-PRESET_4_ADJ_6=3
-PRESET_4_ADJ_7=4
-PRESET_4_ADJ_8=5
-PRESET_4_ADJ_9=15
-PRESET_4_MEM_1=2048
-PRESET_4_MEM_2=2304
-PRESET_4_MEM_3=2816
-PRESET_4_MEM_4=3072
-PRESET_4_MEM_5=3840
-PRESET_4_MEM_6=4352
-PRESET_4_MEM_7=5376
-PRESET_4_MEM_8=6400
-PRESET_4_MEM_9=15360
-PRESET_4_Amap_1=1
-PRESET_4_Amap_2=2
-PRESET_4_Amap_3=4
-PRESET_4_Amap_4=6
-PRESET_4_Amap_5=8
-PRESET_4_Amap_6=9
-PRESET_4_Mmap_1=1
-PRESET_4_Mmap_2=2
-PRESET_4_Mmap_3=3
-PRESET_4_Mmap_4=4
-PRESET_4_Mmap_5=8
-PRESET_4_Mmap_6=9
-
-#5: kodos: experimental
-PRESET_5_ADJ_1=0
-PRESET_5_ADJ_2=1
-PRESET_5_ADJ_3=1
-PRESET_5_ADJ_4=2
-PRESET_5_ADJ_5=6
-PRESET_5_ADJ_6=3
-PRESET_5_ADJ_7=4
-PRESET_5_ADJ_8=5
-PRESET_5_ADJ_9=15
-PRESET_5_MEM_1=1920
-PRESET_5_MEM_2=2304
-PRESET_5_MEM_3=2560
-PRESET_5_MEM_4=3072
-PRESET_5_MEM_5=6912
-PRESET_5_MEM_6=4096
-PRESET_5_MEM_7=5120
-PRESET_5_MEM_8=6400
-PRESET_5_MEM_9=15360
-PRESET_5_Amap_1=1
-PRESET_5_Amap_2=2
-PRESET_5_Amap_3=4
-PRESET_5_Amap_4=6
-PRESET_5_Amap_5=8
-PRESET_5_Amap_6=9
-PRESET_5_Mmap_1=1
-PRESET_5_Mmap_2=2
-PRESET_5_Mmap_3=3
-PRESET_5_Mmap_4=4
-PRESET_5_Mmap_5=8
-PRESET_5_Mmap_6=9
-
-getprop > /data/lmklog
 
 if [ "$(getprop persist.tweak.minfree)" == "enabled" ]; then
  setprop persist.lmkset.preset $PRESET_TWEAK

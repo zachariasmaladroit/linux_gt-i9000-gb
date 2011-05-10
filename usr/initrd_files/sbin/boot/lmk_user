@@ -1,7 +1,7 @@
 # lmk_user: user preset file for LMKset -kodos 
 #
 # copy this file to /data/local, edit it to your liking, then enable it
-# with 'setprop persist.lmkset.preset 0'
+# with 'setprop persist.lmkset.preset 0' as root
 #
 # REBOOT for settings to take effect!
 #
