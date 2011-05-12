@@ -6,7 +6,7 @@
 #
 # Users shoudln't modify or call this script directly - you can choose a preset by doing
 # 'setprop persist.lmkset.preset <preset #>' as root, then rebooting to apply. A 
-# user-defined preset can be defined in lmk_user (see that file for details).
+# user-defined preset can be defined in lmk.conf (see that file for details).
 #
 # Currently the script defaults to preset 2, as these are the only stock settings I've 
 # been able to find which don't appear to have been hacked at by a drunken monkey.
@@ -19,14 +19,17 @@
 #  1: JVB stock settings (kind of)
 #  2: JV1/Nexus S stock settings
 #  3: kodos
+#  4: zram 1
+#  5: zram 2
+#  6: zram 3
 
 PRESET_DEFAULT=2
 
 #if used with CF-Root Tweaks app, the preset enabled by the "min-free tweak"
 PRESET_TWEAK=3
 
-if [ -e /data/local/lmk_user ]; then
- source /data/local/lmk_user
+if [ -e /system/etc/lmk.conf ]; then
+ source /system/etc/lmk.conf
 fi;
 
 #1: JVB stock settings (kind of) : This is the closest I could come to replicating the 
@@ -126,11 +129,107 @@ PRESET_3_Mmap_4=5
 PRESET_3_Mmap_5=8
 PRESET_3_Mmap_6=9
 
-if [ "$(getprop persist.tweak.minfree)" == "enabled" ]; then
- setprop persist.lmkset.preset $PRESET_TWEAK
-elif [ "$(getprop persist.tweak.minfree)" == "disabled" -a "$(getprop persist.lmkset.preset)" == "$PRESET_TWEAK" ]; then
- setprop persist.lmkset.preset $PRESET_DEFAULT
-fi;
+#4: zram 1
+PRESET_4_ADJ_1=0
+PRESET_4_ADJ_2=1
+PRESET_4_ADJ_3=2
+PRESET_4_ADJ_4=3
+PRESET_4_ADJ_5=4
+PRESET_4_ADJ_6=4
+PRESET_4_ADJ_7=5
+PRESET_4_ADJ_8=6
+PRESET_4_ADJ_9=15
+PRESET_4_MEM_1=2048
+PRESET_4_MEM_2=3072
+PRESET_4_MEM_3=4096
+PRESET_4_MEM_4=4096
+PRESET_4_MEM_5=6144
+PRESET_4_MEM_6=6144
+PRESET_4_MEM_7=6144
+PRESET_4_MEM_8=8192
+PRESET_4_MEM_9=10240
+PRESET_4_Amap_1=1
+PRESET_4_Amap_2=2
+PRESET_4_Amap_3=3
+PRESET_4_Amap_4=5
+PRESET_4_Amap_5=8
+PRESET_4_Amap_6=9
+PRESET_4_Mmap_1=1
+PRESET_4_Mmap_2=2
+PRESET_4_Mmap_3=3
+PRESET_4_Mmap_4=5
+PRESET_4_Mmap_5=8
+PRESET_4_Mmap_6=9
+
+#5: zram 2
+PRESET_5_ADJ_1=0
+PRESET_5_ADJ_2=1
+PRESET_5_ADJ_3=2
+PRESET_5_ADJ_4=3
+PRESET_5_ADJ_5=4
+PRESET_5_ADJ_6=4
+PRESET_5_ADJ_7=5
+PRESET_5_ADJ_8=6
+PRESET_5_ADJ_9=15
+PRESET_5_MEM_1=2048
+PRESET_5_MEM_2=3072
+PRESET_5_MEM_3=4096
+PRESET_5_MEM_4=4096
+PRESET_5_MEM_5=6144
+PRESET_5_MEM_6=6144
+PRESET_5_MEM_7=6144
+PRESET_5_MEM_8=9216
+PRESET_5_MEM_9=12288
+PRESET_5_Amap_1=1
+PRESET_5_Amap_2=2
+PRESET_5_Amap_3=3
+PRESET_5_Amap_4=5
+PRESET_5_Amap_5=8
+PRESET_5_Amap_6=9
+PRESET_5_Mmap_1=1
+PRESET_5_Mmap_2=2
+PRESET_5_Mmap_3=3
+PRESET_5_Mmap_4=5
+PRESET_5_Mmap_5=8
+PRESET_5_Mmap_6=9
+
+#6: zram 3
+PRESET_6_ADJ_1=0
+PRESET_6_ADJ_2=1
+PRESET_6_ADJ_3=2
+PRESET_6_ADJ_4=3
+PRESET_6_ADJ_5=4
+PRESET_6_ADJ_6=4
+PRESET_6_ADJ_7=5
+PRESET_6_ADJ_8=6
+PRESET_6_ADJ_9=15
+PRESET_6_MEM_1=2048
+PRESET_6_MEM_2=3072
+PRESET_6_MEM_3=4096
+PRESET_6_MEM_4=4096
+PRESET_6_MEM_5=6144
+PRESET_6_MEM_6=6144
+PRESET_6_MEM_7=6144
+PRESET_6_MEM_8=10240
+PRESET_6_MEM_9=12288
+PRESET_6_Amap_1=1
+PRESET_6_Amap_2=2
+PRESET_6_Amap_3=3
+PRESET_6_Amap_4=5
+PRESET_6_Amap_5=8
+PRESET_6_Amap_6=9
+PRESET_6_Mmap_1=1
+PRESET_6_Mmap_2=2
+PRESET_6_Mmap_3=3
+PRESET_6_Mmap_4=5
+PRESET_6_Mmap_5=8
+PRESET_6_Mmap_6=9
+
+#if [ "$(getprop persist.tweak.minfree)" == "enabled" ]; then
+# setprop persist.lmkset.preset $PRESET_TWEAK
+#elif [ "$(getprop persist.tweak.minfree)" == "disabled" -a "$(getprop persist.lmkset.preset)" == "$PRESET_TWEAK" ]; then
+# setprop persist.lmkset.preset $PRESET_DEFAULT
+#fi;
 
 if [ "$(getprop persist.lmkset.preset)" == "" ]; then
  PRESET=$PRESET_DEFAULT

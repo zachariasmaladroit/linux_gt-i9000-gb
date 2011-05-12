@@ -57,6 +57,10 @@ if [ $(getprop $TWEAK_SCHEDULER_DEADLINE) = "enabled" ]; then
   echo 4 > /sys/class/block/stl9/queue/iosched/writes_starved
 fi;
 
+if [ $(getprop $TWEAK_MINFREE) = "enabled" ]; then
+  setprop $TWEAK_MINFREE disabled
+fi;
+
 if [ $(getprop $TWEAK_NOATIME) = "enabled" ]; then
   # Remount all partitions with noatime, nodiratime
   for k in $(busybox mount | grep relatime | cut -d " " -f3)
@@ -75,7 +79,8 @@ fi;
 
 if [ $(getprop $TWEAK_VM_SWAPPINESS) = "enabled" ]; then
   # Tweak kernel VM management
-  echo "0" > /proc/sys/vm/swappiness
+#  echo "0" > /proc/sys/vm/swappiness
+ setprop $TWEAK_VM_SWAPPINESS disabled
 fi;
 
 if [ $(getprop $TWEAK_VM_DIRTY) = "enabled" ]; then

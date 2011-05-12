@@ -491,9 +491,9 @@ on boot
 # set RLIMIT_NICE to allow priorities from 19 to -20
     setrlimit 13 40 40
 
-# kodos - lmkset
-    start lmkset
-    write /data/sync_fifo_lmkset sync
+# Chainfire - system patch run & wait
+    start cfpatch
+    write /data/sync_fifo sync
 
 # to enable wifi
      setprop wifi.interface "eth0"
@@ -563,20 +563,10 @@ on boot
     chown system system /dev/dun
 # +++++++++++++++++++++++++++++++++++++++++++      
 
-    # Chainfire - system patch run & wait
-    start cfpatch
-    write /data/sync_fifo sync
-
     class_start default
 
 # Chainfire - system patch service
 service cfpatch /sbin/boot-patch.sh
-	user root
-	oneshot
-	disabled
-
-# kodos - lmkset
-service lmkset /sbin/lmkset-boot.sh
 	user root
 	oneshot
 	disabled
