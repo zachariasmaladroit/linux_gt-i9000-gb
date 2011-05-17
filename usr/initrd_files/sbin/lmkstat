@@ -1,6 +1,4 @@
 echo
-echo Preset: `getprop persist.lmkset.preset`
-echo
 getprop |grep MEM
 cat /sys/module/lowmemorykiller/parameters/minfree
 echo

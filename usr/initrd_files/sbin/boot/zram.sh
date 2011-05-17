@@ -1,19 +1,26 @@
 #zram/zcache settings - kodos
 
+
+source /sbin/boot/zram.conf.default
+ZRAM_CONF_VERSION_CURRENT=$ZRAM_CONF_VERSION
+ZRAM_CONF_VERSION=0
+
 mount -o remount,rw /system
 mount -o remount,rw /
 
 if [ ! -e /system/etc/zram.conf ]; then
- mv /sbin/boot/zram.conf.default /system/etc/zram.conf
- setprop persist.lmkset.preset 5
-else
- rm /sbin/boot/zram.conf.default
+ cp /sbin/boot/zram.conf.default /system/etc/zram.conf
+fi;
+
+source /system/etc/zram.conf
+
+if [ ! "$ZRAM_CONF_VERSION" == "$ZRAM_CONF_VERSION_CURRENT" ]; then
+ cp /sbin/boot/zram.conf.default /system/etc/zram.conf
+ source /system/etc/zram.conf
 fi;
 
 mount -o remount,ro /system
 mount -o remount,ro /
-
-source /system/etc/zram.conf
 
 if [ $ZRAM_ENABLED == "1" ]; then
  /sbin/insmod /lib/modules/zram.ko num_devices=$ZRAM_NUM_DEVICES
