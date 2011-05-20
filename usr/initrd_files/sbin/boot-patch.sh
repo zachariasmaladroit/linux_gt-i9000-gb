@@ -9,6 +9,8 @@
 /sbin/ext/busybox sh /sbin/boot/tweaks.sh
 /sbin/ext/busybox sh /sbin/boot/lmkset.sh
 /sbin/ext/busybox sh /sbin/boot/scripts.sh
+/sbin/ext/busybox sh /sbin/boot/install_bln_liblights.sh
+/sbin/ext/busybox sh /sbin/boot/remountsystemrw.sh
 
 read sync < /data/sync_fifo
 rm /data/sync_fifo
