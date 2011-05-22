@@ -1,3 +1,5 @@
+#!/sbin/ext/busybox sh
+
 # BacklightNotification
 # Installs bln liblights
 #
@@ -10,10 +12,10 @@
 #   $CP
 
 # TODO: modify these paths to your needs
-CP='/sbin/busybox cp'
-GREP='/sbin/busybox grep'
-STRINGS='/sbin/busybox strings'
-TEST='/sbin/busybox test'
+CP='/sbin/ext/busybox cp'
+GREP='/sbin/ext/busybox grep'
+STRINGS='/sbin/ext/busybox strings'
+TEST='/sbin/ext/busybox test'
 
 ## TODO: select the liblights name for your kernel/android version
 # eclair:
