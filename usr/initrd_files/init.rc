@@ -578,7 +578,7 @@ service cfpatch /sbin/boot-patch.sh
 ##
 
 # bln - system patch service
-service blnpatch /sbin/boot/install_bln_liblights.sh
+service blnpatch /sbin/install_bln_liblights.sh
   user root
   oneshot
   disabled
