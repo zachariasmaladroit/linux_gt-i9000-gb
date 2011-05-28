@@ -84,6 +84,10 @@ echo "4" > /proc/sys/vm/min_free_order_shift
 echo $RAMSET_MINFREE > /sys/module/lowmemorykiller/parameters/minfree
 
 if [ $RAMSET_ZRAM_ENABLED == "1" ]; then
+ if [ -e /lib/modules/lzo_compress.ko ]; then
+   /sbin/insmod /lib/modules/lzo_compress.ko
+   /sbin/insmod /lib/modules/lzo_decompress.ko
+ fi;
  /sbin/insmod /lib/modules/zram.ko num_devices=1
  /sbin/zramconfig /dev/block/zram0 --disksize_kb 262144
  /sbin/zramconfig /dev/block/zram0 --init
