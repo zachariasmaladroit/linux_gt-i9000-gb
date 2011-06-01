@@ -1,9 +1,9 @@
 setprop customkernel.cf-root true 
 setprop customkernel.base.cf-root true 
 setprop customkernel.name CF-Root 
-setprop customkernel.namedisplay "CF-Root 3.1" 
-setprop customkernel.version.number 53 
-setprop customkernel.version.name 3.1 
+setprop customkernel.namedisplay "CF-Root 3.2" 
+setprop customkernel.version.number 55 
+setprop customkernel.version.name 3.2 
 setprop customkernel.bootani.zip true 
 setprop customkernel.bootani.bin true 
 setprop customkernel.cwm true 

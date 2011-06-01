@@ -1,4 +1,4 @@
-if /sbin/ext/busybox [ ! -f /system/cfroot/release-53-JVB- ]; 
+if /sbin/ext/busybox [ ! -f /system/cfroot/release-55-JVH- ]; 
 then
 # Remount system RW
     /sbin/ext/busybox mount -o remount,rw /system
@@ -53,7 +53,7 @@ then
     toolbox rm /data/cfroot/*
     toolbox rmdir /data/cfroot
     toolbox rm /system/cfroot/*
-    echo 1 > /system/cfroot/release-53-JVB- 
+    echo 1 > /system/cfroot/release-55-JVH- 
 
 # Remount system RO
     /sbin/ext/busybox mount -o remount,ro /system
