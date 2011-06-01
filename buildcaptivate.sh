@@ -5,7 +5,7 @@
 make aries_talon_defconfig
 
 export LOCALVERSION="-I9000XWJVB-CL118186"
-export KBUILD_BUILD_VERSION=$1
+export KBUILD_BUILD_VERSION="0.2.1-talon-dev"
 export INSTALL_MOD_PATH=./mod_inst
 make modules -j`grep 'processor' /proc/cpuinfo | wc -l`
 make modules_install
