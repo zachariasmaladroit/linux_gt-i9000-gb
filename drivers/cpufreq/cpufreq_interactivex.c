@@ -54,13 +54,13 @@ static unsigned int enabled = 0;
 
 /*
  * The minimum ammount of time to spend at a frequency before we can ramp down,
- * default is 80ms.
+ * default is 50ms.
  */
-#define DEFAULT_MIN_SAMPLE_TIME 80000;
+#define DEFAULT_MIN_SAMPLE_TIME 50000;
 static unsigned long min_sample_time;
 
-#define FREQ_THRESHOLD 1200000;
-#define RESUME_SPEED 1200000;
+#define FREQ_THRESHOLD 1000000;
+#define RESUME_SPEED 1000000;
 
 static int cpufreq_governor_interactivex(struct cpufreq_policy *policy,
 		unsigned int event);
@@ -375,4 +375,3 @@ MODULE_AUTHOR("Mike Chan <mike@android.com>");
 MODULE_DESCRIPTION("'cpufreq_interactiveX' - A cpufreq governor for "
 	"Latency sensitive workloads");
 MODULE_LICENSE("GPL");
-
