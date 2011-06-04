@@ -726,7 +726,7 @@ sched_feat_write(struct file *filp, const char __user *ubuf,
 {
 	char buf[64];
 	char *cmp = buf;
-	int neg = 0;
+	int neg = 0, cmplen;
 	int i;
 
 	if (cnt > 63)
@@ -736,15 +736,24 @@ sched_feat_write(struct file *filp, const char __user *ubuf,
 		return -EFAULT;
 
 	buf[cnt] = 0;
+	for (i = 0; i < cnt; i++) {
+		if (buf[i] == '\n' || buf[i] == ' ') {
+			buf[i] = 0;
+			break;
+		}
+	}
 
 	if (strncmp(buf, "NO_", 3) == 0) {
 		neg = 1;
 		cmp += 3;
 	}
 
+	cmplen = strlen(cmp);
 	for (i = 0; sched_feat_names[i]; i++) {
 		int len = strlen(sched_feat_names[i]);
 
+		if (cmplen != len)
+			continue;
 		if (strncmp(cmp, sched_feat_names[i], len) == 0) {
 			if (neg)
 				sysctl_sched_features &= ~(1UL << i);
@@ -853,6 +862,26 @@ static inline u64 global_rt_runtime(void)
 static inline int task_current(struct rq *rq, struct task_struct *p)
 {
 	return rq->curr == p;
+}
+
+/*
+ * Look for any tasks *anywhere* that are running nice 0 or better. We do
+ * this lockless for overhead reasons since the occasional wrong result
+ * is harmless.
+ */
+int above_background_load(void)
+{
+        struct task_struct *cpu_curr;
+        unsigned long cpu;
+
+        for_each_online_cpu(cpu) {
+                cpu_curr = cpu_rq(cpu)->curr;
+                if (unlikely(!cpu_curr))
+                        continue;
+                if (PRIO_TO_NICE(cpu_curr->static_prio) < 1)
+                        return 1;
+        }
+        return 0;
 }
 
 #ifndef __ARCH_WANT_UNLOCKED_CTXSW
@@ -1979,6 +2008,9 @@ task_hot(struct task_struct *p, u64 now, struct sched_domain *sd)
 	if (p->sched_class != &fair_sched_class)
 		return 0;
 
+	if (p->policy == SCHED_IDLE)
+		return 0;
+
 	/*
 	 * Buddy candidates are cache hot:
 	 */
@@ -2467,8 +2499,9 @@ void sched_fork(struct task_struct *p, int clone_flags)
 		if (PRIO_TO_NICE(p->static_prio) < 0) {
 			p->static_prio = NICE_TO_PRIO(0);
 			p->normal_prio = p->static_prio;
-			set_load_weight(p);
 		}
+
+		set_load_weight(p);
 
 		/*
 		 * We don't need the reset flag anymore after the fork. It has
