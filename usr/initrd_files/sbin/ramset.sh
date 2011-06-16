@@ -13,7 +13,7 @@ RAM_CONF_VERSION=0
 /voodoo/bin/remount_system_rw
 
 if [ ! -e /system/etc/ram.conf ]; then
- cp /sbin/ram.conf.default /system/etc/ram.conf
+ busybox cp /sbin/ram.conf.default /system/etc/ram.conf
 fi;
 
 source /system/etc/ram.conf
@@ -22,7 +22,7 @@ if [ ! "$RAM_CONF_VERSION" == "$RAM_CONF_VERSION_CURRENT" ]; then
  rm /system/etc/lmk.conf
  rm /system/etc/zram.conf
  rm /data/property/persist.lmkset.preset
- cp /sbin/ram.conf.default /system/etc/ram.conf
+ busybox cp /sbin/ram.conf.default /system/etc/ram.conf
  source /system/etc/ram.conf
 fi;
 
