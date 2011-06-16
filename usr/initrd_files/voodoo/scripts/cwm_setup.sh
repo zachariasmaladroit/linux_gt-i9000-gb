@@ -8,6 +8,7 @@ chown -R 0.0 /cwm
 
 cp /cwm/sbin/recovery /sbin/recovery
 chmod 755 /sbin/recovery
+rm -f /sbin/busybox
 ln -s recovery /sbin/busybox
 
 # res stuff
