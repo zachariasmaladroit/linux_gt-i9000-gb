@@ -13,16 +13,16 @@ RAM_CONF_VERSION=0
 /voodoo/bin/remount_system_rw
 
 if [ ! -e /system/etc/ram.conf ]; then
- busybox cp /sbin/ram.conf.default /system/etc/ram.conf
+ /bin/cp /sbin/ram.conf.default /system/etc/ram.conf
 fi;
 
 source /system/etc/ram.conf
 
 if [ ! "$RAM_CONF_VERSION" == "$RAM_CONF_VERSION_CURRENT" ]; then
- rm /system/etc/lmk.conf
- rm /system/etc/zram.conf
- rm /data/property/persist.lmkset.preset
- busybox cp /sbin/ram.conf.default /system/etc/ram.conf
+ /bin/rm /system/etc/lmk.conf
+ /bin/rm /system/etc/zram.conf
+ /bin/rm /data/property/persist.lmkset.preset
+ /bin/cp /sbin/ram.conf.default /system/etc/ram.conf
  source /system/etc/ram.conf
 fi;
 
@@ -84,14 +84,14 @@ echo $RAMSET_MINFREE > /sys/module/lowmemorykiller/parameters/minfree
 
 if [ $RAMSET_ZRAM_ENABLED == "1" ]; then
  if [ -e /lib/modules/lzo_compress.ko ]; then
-   insmod /lib/modules/lzo_compress.ko
-   insmod /lib/modules/lzo_decompress.ko
+   /bin/insmod /lib/modules/lzo_compress.ko
+   /bin/insmod /lib/modules/lzo_decompress.ko
  fi;
- insmod /lib/modules/zram.ko num_devices=1
+ /bin/insmod /lib/modules/zram.ko num_devices=1
  /sbin/zramconfig /dev/block/zram0 --disksize_kb 262144
  /sbin/zramconfig /dev/block/zram0 --init
- busybox mkswap /dev/block/zram0
- busybox swapon /dev/block/zram0
+ mkswap /dev/block/zram0
+ swapon /dev/block/zram0
  setprop persist.tweak.vm.swappiness disabled
 fi;
 
