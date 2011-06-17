@@ -780,6 +780,9 @@ service gpsd /system/vendor/bin/launch_gps.sh
     user gps
     group system inet
 
+service tvout /system/bin/tvoutserver
+     user system
+     group graphics
 
 service run_parts /voodoo/scripts/run-parts.sh /system/etc/init.d
   oneshot 
