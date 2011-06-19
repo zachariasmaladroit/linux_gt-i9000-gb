@@ -196,9 +196,9 @@ static IMG_VOID QueueDumpDebugInfo_ForEachCb(PVRSRV_DEVICE_NODE *psDeviceNode)
 
 IMG_VOID QueueDumpDebugInfo(IMG_VOID)
 {
-	SYS_DATA	*psSysData;
-	SysAcquireData(&psSysData);
-	List_PVRSRV_DEVICE_NODE_ForEach(psSysData->psDeviceNodeList, &QueueDumpDebugInfo_ForEachCb);
+//	SYS_DATA	*psSysData;
+//	SysAcquireData(&psSysData);
+//	List_PVRSRV_DEVICE_NODE_ForEach(psSysData->psDeviceNodeList, &QueueDumpDebugInfo_ForEachCb);
 }
 
 

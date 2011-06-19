@@ -1,4 +1,5 @@
 ccflags-y := \
+	-fomit-frame-pointer\
 	-Wno-pointer-sign\
 	-fno-strict-overflow\
 	-fconserve-stack\
@@ -10,7 +11,6 @@ ccflags-y := \
 	-Wstrict-prototypes\
 	-Wno-unused-parameter\
 	-Wno-sign-compare\
-	-Werror\
 	-fno-strict-aliasing\
 	-Wno-pointer-arith\
 	-Os
@@ -135,7 +135,7 @@ s3c_bc-y := \
 	s3c_bc/s3c_bc.o \
 	s3c_bc/s3c_bc_linux.o
 
-obj-$(CONFIG_PVR_PDUMP) += dbgdrv
+//obj-$(CONFIG_PVR_PDUMP) += dbgdrv
 
 obj-$(CONFIG_PVR_SGX) += pvrsrvkm.o
 
