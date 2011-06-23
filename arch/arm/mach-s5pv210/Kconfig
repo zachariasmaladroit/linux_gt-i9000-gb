@@ -179,12 +179,6 @@ config GALAXY_I897
        help
        Captivate specific settings
 
-config DISABLE_PRINTK
-       bool "Disable Printk in Kernel"
-       depends on EXPERIMENTAL
-       help
-         Disable printk completely in the kernel to reduce overhead
-
 config S5PV210_SETUP_FB
 	bool
 	depends on FB_S3C
@@ -198,12 +192,6 @@ config S5P_ADC
 	default y
 	help
 	  ADC ( A/D Conversion ) driver for Samsung S5PXXXX
-
-config S5P_BIGMEM
-       bool "select Bigmem memory config"
-       default n
-       help 
-         Enable 353MB memory config. Breaks 720p recording
           
 config S5PV210_SETUP_FIMC0
 	bool
@@ -249,3 +237,34 @@ config CPU_DIDLE
 	default y
 
 endif
+
+comment "Talon Kernel Settings"
+choice
+	prompt "Frequency Choices"
+	default CPU_1200
+
+config CPU_1440
+       bool "1440mhz Overclock"
+
+config CPU_1400
+       bool "1400mhz Overclock"
+
+config CPU_1200
+       bool "1200mhz Overclock"
+
+config CPU_UV
+       bool "1000mhz No-OC"
+
+endchoice
+
+config S5P_BIGMEM
+       bool "select Bigmem memory config"
+       default n
+       help 
+         Enable 353MB memory config. Breaks 720p recording
+
+config DISABLE_PRINTK
+       bool "Disable Printk in Kernel"
+       depends on EXPERIMENTAL
+       help
+         Disable printk completely in the kernel to reduce overhead
