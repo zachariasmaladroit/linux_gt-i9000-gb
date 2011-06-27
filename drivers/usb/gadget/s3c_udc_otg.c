@@ -441,7 +441,7 @@ int s3c_vbus_enable(struct usb_gadget *gadget, int enable)
 #ifdef CONFIG_CPU_UV
   s5pv210_lock_dvfs_high_level(DVFS_LOCK_TOKEN_8, L3); //200Mhz lock
 #endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
+#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
   s5pv210_lock_dvfs_high_level(DVFS_LOCK_TOKEN_8, L4); //200Mhz lock
 #endif
  } else {

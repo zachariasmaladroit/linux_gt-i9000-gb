@@ -66,6 +66,9 @@ static struct cpufreq_frequency_table freq_table[] = {
 #ifdef CONFIG_CPU_1400
 	{L0, 1400*1000},
 #endif
+#ifdef CONFIG_CPU_1300
+        {L0, 1300*1000},
+#endif
 #ifdef CONFIG_CPU_1200
         {L0, 1200*1000},
 #endif
@@ -82,7 +85,7 @@ static struct cpufreq_frequency_table freq_table[] = {
 extern int exp_UV_mV[5];
 unsigned int freq_uv_table[5][3] = {
 #endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
+#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
 extern int exp_UV_mV[6];
 unsigned int freq_uv_table[6][3] = {
 #endif
@@ -99,6 +102,9 @@ unsigned int freq_uv_table[6][3] = {
 #endif
 #ifdef CONFIG_CPU_1400
 	{1400000, 1450, 1450},
+#endif
+#ifdef CONFIG_CPU_1300
+	{1300000, 1350, 1350},
 #endif
 #ifdef CONFIG_CPU_1200
 	{1200000, 1275, 1275},
@@ -120,7 +126,7 @@ unsigned int gpu[5][2] = {
   {200, 200},
   {100, 100}
 #endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
+#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
 unsigned int gpu[6][2] = {
   //stock  current
   {200, 200},
@@ -150,7 +156,7 @@ const unsigned long arm_volt_max = 1275000;
 #if defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
 const unsigned long arm_volt_max = 1500001;
 #endif
-#ifdef CONFIG_CPU_1200
+#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300)
 const unsigned long arm_volt_max = 1350000;
 #endif
 
@@ -191,6 +197,12 @@ static struct s5pv210_dvs_conf dvs_conf[] = {
 		.int_volt   = 1175000,
 	},
 #endif
+#ifdef CONFIG_CPU_1300
+	[L0] = {
+		.arm_volt	= 1350000,
+		.int_volt   = 1100000,
+	},
+#endif
 #ifdef CONFIG_CPU_1200
 	[L0] = {
 		.arm_volt	= 1300000,
@@ -223,7 +235,7 @@ static struct s5pv210_dvs_conf dvs_conf[] = {
 #ifdef CONFIG_CPU_UV
 static u32 clkdiv_val[5][11] = {
 #endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
+#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
 static u32 clkdiv_val[6][11] = {
 #endif
 	/*{ APLL, A2M, HCLK_MSYS, PCLK_MSYS,
@@ -248,6 +260,10 @@ static u32 clkdiv_val[6][11] = {
 #endif
 #ifdef CONFIG_CPU_1400
 	// L0: 1400
+	{0, 5, 5, 1, 3, 1, 4, 1, 3, 0, 0},
+#endif
+#ifdef CONFIG_CPU_1300
+	// L0: 1300
 	{0, 5, 5, 1, 3, 1, 4, 1, 3, 0, 0},
 #endif
 #ifdef CONFIG_CPU_1200
@@ -342,6 +358,19 @@ static struct s3c_freq clk_info[] = {
 	[L0] = {	/* L0: 1.4GHz */
 			.fclk       = 1400000,
 			.armclk     = 1400000,
+			.hclk_tns   = 0,
+			.hclk       = 133000,
+			.pclk       = 66000,
+			.hclk_msys  = 200000,
+			.pclk_msys  = 100000,
+			.hclk_dsys  = 166750,
+			.pclk_dsys  = 83375,
+	},
+#endif
+#ifdef CONFIG_CPU_1300
+	[L0] = {	/* L0: 1.3GHz */
+			.fclk       = 1300000,
+			.armclk     = 1300000,
 			.hclk_tns   = 0,
 			.hclk       = 133000,
 			.pclk       = 66000,
@@ -541,6 +570,11 @@ static void s5pv210_cpufreq_clksrcs_MPLL2APLL(unsigned int index,
 	if (index == L0)
 		/* APLL FOUT becomes 1400 Mhz */
 		__raw_writel(PLL45XX_APLL_VAL_1400, S5P_APLL_CON);
+#endif
+#ifdef CONFIG_CPU_1300
+	if (index == L0)
+		/* APLL FOUT becomes 1300 Mhz */
+		__raw_writel(PLL45XX_APLL_VAL_1300, S5P_APLL_CON);
 #endif
 #ifdef CONFIG_CPU_1200
 	if (index == L0)
@@ -785,6 +819,11 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 #endif
 #ifdef CONFIG_CPU_1400
     case 1400000:
+      s3c_freqs.old.hclk_msys = gpu[0][1];
+      break;
+#endif
+#ifdef CONFIG_CPU_1300
+    case 1300000:
       s3c_freqs.old.hclk_msys = gpu[0][1];
       break;
 #endif
