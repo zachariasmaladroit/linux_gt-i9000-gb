@@ -249,6 +249,9 @@ config CPU_1440
 config CPU_1400
        bool "1400mhz Overclock"
 
+config CPU_1300
+       bool "1300mhz Overclock"
+
 config CPU_1200
        bool "1200mhz Overclock"
 
