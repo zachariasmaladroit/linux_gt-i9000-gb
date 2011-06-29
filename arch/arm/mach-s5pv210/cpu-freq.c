@@ -104,10 +104,10 @@ unsigned int freq_uv_table[6][3] = {
 	{1400000, 1450, 1450},
 #endif
 #ifdef CONFIG_CPU_1300
-	{1300000, 1350, 1350},
+	{1300000, 1325, 1325},
 #endif
 #ifdef CONFIG_CPU_1200
-	{1200000, 1275, 1275},
+	{1200000, 1300, 1300},
 #endif
 	{1000000, 1275, 1275},
 	{800000, 1200, 1250},
@@ -199,7 +199,7 @@ static struct s5pv210_dvs_conf dvs_conf[] = {
 #endif
 #ifdef CONFIG_CPU_1300
 	[L0] = {
-		.arm_volt	= 1350000,
+		.arm_volt	= 1325000,
 		.int_volt   = 1100000,
 	},
 #endif
