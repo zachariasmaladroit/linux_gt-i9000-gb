@@ -22,4 +22,15 @@ fi
 #clean up old cf-root tweak properties
 /system/xbin/busybox rm /data/property/persist.tweak*
 
+
+#disable iostats to reduce overhead
+STL=`ls -d /sys/block/stl*`;
+BML=`ls -d /sys/block/bml*`;
+MMC=`ls -d /sys/block/mmc*`;
+for k in $STL $BML $MMC;
+do
+ echo "0" > $k/queue/iostats
+done
+
+
 echo 0 > /proc/sys/vm/page-cluster
