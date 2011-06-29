@@ -21,3 +21,5 @@ fi
 
 #clean up old cf-root tweak properties
 /system/xbin/busybox rm /data/property/persist.tweak*
+
+echo 0 > /proc/sys/vm/page-cluster
