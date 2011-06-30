@@ -33,4 +33,4 @@ do
 done
 
 
-echo 0 > /proc/sys/vm/page-cluster
+echo 12 > /proc/sys/vm/page-cluster
