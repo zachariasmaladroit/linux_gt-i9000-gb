@@ -6,7 +6,7 @@ if ! [ -e .config ]; then
  make $1
 fi
 
-export KBUILD_BUILD_VERSION="0.2.2-talon-dev"
+export KBUILD_BUILD_VERSION="0.3.x-talon-dev_snail09"
 
 #export LOCALVERSION="-I9000XWJVB-CL118186"
 #export LOCALVERSION="-I9000XWJVH-CL184813"
