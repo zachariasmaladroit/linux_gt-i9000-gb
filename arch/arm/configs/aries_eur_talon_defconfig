@@ -345,9 +345,9 @@ CONFIG_CPU_DIDLE=y
 
 # Talon Kernel Settings
 #
-CONFIG_CPU_1440=y
+# CONFIG_CPU_1440 is not set
 # CONFIG_CPU_1400 is not set
-# CONFIG_CPU_1300 is not set
+CONFIG_CPU_1300=y
 # CONFIG_CPU_1200 is not set
 # CONFIG_CPU_UV is not set
 # CONFIG_S5P_BIGMEM is not set
