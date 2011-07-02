@@ -36,6 +36,7 @@ delete("/system/etc/init.d/89system_tweak");
 delete("/system/etc/init.d/S98screenstate_scaling");
 delete("/system/etc/init.d/90screenstate_scaling");
 delete("/system/etc/init.d/S97ramscript");
+delete("/system/etc/init.d/S97rambooster");
 show_progress(0.100000, 60);
 ui_print(" ");
 ui_print("DONE! ");
