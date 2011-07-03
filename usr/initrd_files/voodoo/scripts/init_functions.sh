@@ -814,17 +814,13 @@ manage_logs()
 
 readd_boot_animation()
 {
-	echo >> init.rc
-	if test -f /data/local/bootanimation.zip || test -f /system/media/bootanimation.zip; then
-		echo 'service bootanim /system/bin/bootanimation
-			user graphics
-			group graphics
-			disabled
-			oneshot' >> init.rc
+	echo >> bootani.sh
+	if test -e /data/dalvik-cache && test -f /system/media/sanim.zip; then
+		echo '/system/bin/bootanimation &
+sleep 20
+kill $!' >> bootani.sh
 	else
-		echo 'service playlogos1 /system/bin/playlogos1
-			user root
-			oneshot' >> init.rc
+		echo '/system/bin/samsungani' >> bootani.sh
 	fi
 }
 
@@ -863,9 +859,9 @@ letsgo()
 	rm -rf /system_in_ram
 
 	# deal with the boot animation
-	#mount_ data
-	#readd_boot_animation
-	#umount /data
+	mount_ data
+	readd_boot_animation
+	umount /data
 
 	# mount Ext4 partitions
 	test $cache_fs = ext4 && mount_ cache && > /voodoo/run/lagfix_enabled
