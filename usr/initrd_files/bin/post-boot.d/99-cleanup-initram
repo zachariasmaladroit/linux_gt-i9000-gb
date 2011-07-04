@@ -9,6 +9,7 @@
 /bin/rm /lib/*.so
 /bin/rm -r /sbin
 /bin/ln -s /system/xbin /sbin
+/bin/rm /.gitignore
 
 /bin/mount -o remount,ro /
 /bin/mount -o remount,ro /system

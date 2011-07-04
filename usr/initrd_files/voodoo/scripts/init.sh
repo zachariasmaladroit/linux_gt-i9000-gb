@@ -119,12 +119,16 @@ configure_from_kernel_version
 # mount /system so we will be able to use df, fat.format and asound.conf
 mount_ system
 
-
 # we will need these directories
 mkdir /cache 2> /dev/null
 mkdir /dbdata 2> /dev/null
 mkdir /data 2> /dev/null
 
+# ramset update - kodos
+mount_ data
+/bin/ramset-install-conf
+/bin/ramset noremount
+umount /data
 
 # copy the sound configuration
 cp /system/etc/asound.conf /etc/asound.conf

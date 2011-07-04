@@ -4,8 +4,6 @@ source /bin/ram.conf.default
 RAM_CONF_VERSION_CURRENT=$RAM_CONF_VERSION
 RAM_CONF_VERSION=0
 
-/bin/sh /voodoo/bin/remount_system_rw
-
 if [ ! -e /system/etc/ram.conf ]; then
  /bin/cp /bin/ram.conf.default /system/etc/ram.conf
 fi;
@@ -16,7 +14,3 @@ if [ ! "$RAM_CONF_VERSION" == "$RAM_CONF_VERSION_CURRENT" ]; then
  /bin/cp /bin/ram.conf.default /system/etc/ram.conf
  source /system/etc/ram.conf
 fi;
-
-/bin/sh /voodoo/bin/remount_system_ro
-
-/bin/sh /bin/ramset
