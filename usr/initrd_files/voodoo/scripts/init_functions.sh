@@ -817,7 +817,7 @@ readd_boot_animation()
 	echo >> bootani.sh
 	if test -e /data/dalvik-cache && test -f /system/media/sanim.zip; then
 		echo '/system/bin/bootanimation &
-sleep 20
+sleep 15
 kill $!' >> bootani.sh
 	else
 		echo '/system/bin/samsungani' >> bootani.sh
