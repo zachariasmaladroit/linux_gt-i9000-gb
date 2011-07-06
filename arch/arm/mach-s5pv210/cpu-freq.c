@@ -25,6 +25,7 @@
 
 #include <mach/map.h>
 #include <mach/cpu-freq-v210.h>
+#include <mach/voltages.h>
 #include <mach/regs-clock.h>
 #include <mach/regs-gpio.h>
 
@@ -84,15 +85,14 @@ static struct cpufreq_frequency_table freq_table[] = {
 #ifdef CONFIG_CPU_UV
 extern int exp_UV_mV[5];
 unsigned int freq_uv_table[5][3] = {
-#endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
+#else
 extern int exp_UV_mV[6];
 unsigned int freq_uv_table[6][3] = {
 #endif
 	//frequency, stock voltage, current voltage
 #ifdef CONFIG_CPU_UV
 	{1000000, 1275, 1275},
-	{800000, 1200, 1250},
+	{800000, 1200, 1200},
 	{400000, 1050, 1050},
 	{200000, 950, 950},
 	{100000, 950, 950}
@@ -110,7 +110,7 @@ unsigned int freq_uv_table[6][3] = {
 	{1200000, 1300, 1300},
 #endif
 	{1000000, 1275, 1275},
-	{800000, 1200, 1250},
+	{800000, 1200, 1200},
 	{400000, 1050, 1050},
 	{200000, 950, 950},
 	{100000, 950, 950}
@@ -125,8 +125,7 @@ unsigned int gpu[5][2] = {
   {200, 200},
   {200, 200},
   {100, 100}
-#endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
+#else
 unsigned int gpu[6][2] = {
   //stock  current
   {200, 200},
@@ -150,92 +149,62 @@ static unsigned int g_dvfslockval[DVFS_LOCK_TOKEN_NUM];
 //static DEFINE_MUTEX(dvfs_high_lock);
 #endif
 
-#ifdef CONFIG_CPU_UV
-const unsigned long arm_volt_max = 1275000;
-#endif
-#if defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
-const unsigned long arm_volt_max = 1500001;
-#endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300)
-const unsigned long arm_volt_max = 1350000;
-#endif
-
-const unsigned long int_volt_max = 1250000;
+const unsigned long arm_volt_max = ARMVOLT;
+const unsigned long int_volt_max = INTVOLT;
 
 static struct s5pv210_dvs_conf dvs_conf[] = {
 #ifdef CONFIG_CPU_UV
 	[L0] = {
-		.arm_volt   = 1275000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM1,
+		.int_volt   = DVSINT1,
 	},
 	[L1] = {
-		.arm_volt   = 1200000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM2,
+		.int_volt   = DVSINT1,
 	},
 	[L2] = {
-		.arm_volt   = 1050000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM3,
+		.int_volt   = DVSINT1,
 	},
 	[L3] = {
-		.arm_volt   = 950000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM4,
+		.int_volt   = DVSINT1,
 	},
 	[L4] = {
-		.arm_volt   = 950000,
-		.int_volt   = 1000000,
+		.arm_volt   = DVSARM4,
+		.int_volt   = DVSINT2,
 	},
 #else
-#ifdef CONFIG_CPU_1440
 	[L0] = {
-		.arm_volt	= 1475000,
-		.int_volt   = 1200000,
+		.arm_volt   = DVSARM1,
+		.int_volt   = DVSINT1,
 	},
-#endif
-#ifdef CONFIG_CPU_1400
-	[L0] = {
-		.arm_volt	= 1450000,
-		.int_volt   = 1175000,
-	},
-#endif
-#ifdef CONFIG_CPU_1300
-	[L0] = {
-		.arm_volt	= 1325000,
-		.int_volt   = 1100000,
-	},
-#endif
-#ifdef CONFIG_CPU_1200
-	[L0] = {
-		.arm_volt	= 1300000,
-		.int_volt   = 1100000,
-	},
-#endif
 	[L1] = {
-		.arm_volt   = 1275000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM2,
+		.int_volt   = DVSINT1,
 	},
 	[L2] = {
-		.arm_volt   = 1200000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM3,
+		.int_volt   = DVSINT1,
 	},
 	[L3] = {
-		.arm_volt   = 1050000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM4,
+		.int_volt   = DVSINT1,
 	},
 	[L4] = {
-		.arm_volt   = 950000,
-		.int_volt   = 1100000,
+		.arm_volt   = DVSARM5,
+		.int_volt   = DVSINT1,
 	},
 	[L5] = {
-		.arm_volt   = 950000,
-		.int_volt   = 1000000,
+		.arm_volt   = DVSARM5,
+		.int_volt   = DVSINT2,
 	},
 #endif
 };
 
 #ifdef CONFIG_CPU_UV
 static u32 clkdiv_val[5][11] = {
-#endif
-#if defined(CONFIG_CPU_1200) || defined(CONFIG_CPU_1300) || defined(CONFIG_CPU_1400) || defined(CONFIG_CPU_1440)
+#else
 static u32 clkdiv_val[6][11] = {
 #endif
 	/*{ APLL, A2M, HCLK_MSYS, PCLK_MSYS,
@@ -285,17 +254,17 @@ static u32 clkdiv_val[6][11] = {
 
 static struct s3c_freq clk_info[] = {
 #ifdef CONFIG_CPU_UV
-	[L0] = { /* L0: 1GHz */
-	                .fclk = 1000000,
-	                .armclk = 1000000,
-	                .hclk_tns = 0,
-	                .hclk = 133000,
-	                .pclk = 66000,
-	                .hclk_msys = 200000,
-	                .pclk_msys = 100000,
-	                .hclk_dsys = 166750,
-	                .pclk_dsys = 83375
-        },
+	[L0] = {	/* L0: 1GHz */
+		.fclk       = TOPCPUFREQUENCY,
+		.armclk     = TOPCPUFREQUENCY,
+		.hclk_tns   = 0,
+		.hclk       = 133000,
+		.pclk       = 66000,
+		.hclk_msys  = 200000,
+		.pclk_msys  = 100000,
+		.hclk_dsys  = 166750,
+		.pclk_dsys  = 83375,
+	},
 	[L1] = {	/* L1: 800MHz */
 		.fclk       = 800000,
 		.armclk     = 800000,
@@ -341,68 +310,27 @@ static struct s3c_freq clk_info[] = {
 		.pclk_dsys  = 83375,
 	},
 #else
-#ifdef CONFIG_CPU_1440
-	[L0] = {	/* L0: 1.44GHz */
-			.fclk       = 1440000,
-			.armclk     = 1440000,
-			.hclk_tns   = 0,
-			.hclk       = 133000,
-			.pclk       = 66000,
-			.hclk_msys  = 200000,
-			.pclk_msys  = 100000,
-			.hclk_dsys  = 166750,
-			.pclk_dsys  = 83375,
+	[L0] = {	/* L0: */
+		.fclk       = TOPCPUFREQUENCY,
+		.armclk     = TOPCPUFREQUENCY,
+		.hclk_tns   = 0,
+		.hclk       = 133000,
+		.pclk       = 66000,
+		.hclk_msys  = 200000,
+		.pclk_msys  = 100000,
+		.hclk_dsys  = 166750,
+		.pclk_dsys  = 83375,
 	},
-#endif
-#ifdef CONFIG_CPU_1400
-	[L0] = {	/* L0: 1.4GHz */
-			.fclk       = 1400000,
-			.armclk     = 1400000,
-			.hclk_tns   = 0,
-			.hclk       = 133000,
-			.pclk       = 66000,
-			.hclk_msys  = 200000,
-			.pclk_msys  = 100000,
-			.hclk_dsys  = 166750,
-			.pclk_dsys  = 83375,
-	},
-#endif
-#ifdef CONFIG_CPU_1300
-	[L0] = {	/* L0: 1.3GHz */
-			.fclk       = 1300000,
-			.armclk     = 1300000,
-			.hclk_tns   = 0,
-			.hclk       = 133000,
-			.pclk       = 66000,
-			.hclk_msys  = 200000,
-			.pclk_msys  = 100000,
-			.hclk_dsys  = 166750,
-			.pclk_dsys  = 83375,
-	},
-#endif
-#ifdef CONFIG_CPU_1200
-	[L0] = {	/* L0: 1.2GHz */
-			.fclk       = 1200000,
-			.armclk     = 1200000,
-			.hclk_tns   = 0,
-			.hclk       = 133000,
-			.pclk       = 66000,
-			.hclk_msys  = 200000,
-			.pclk_msys  = 100000,
-			.hclk_dsys  = 166750,
-			.pclk_dsys  = 83375,
-	},
-#endif
-	[L1] = { /* L1: 1GHz */
-	                .fclk = 1000000,
-	                .armclk = 1000000,
-	                .hclk_tns = 0,
-	                .hclk = 133000,
-	                .pclk = 66000,
-	                .hclk_msys = 200000,
-	                .pclk_msys = 100000,
-	                .hclk_dsys = 166750,
-	                .pclk_dsys = 83375
+	[L1] = {	/* L1: 1GHz */
+		.fclk       = 1000000,
+		.armclk     = 1000000,
+		.hclk_tns   = 0,
+		.hclk       = 133000,
+		.pclk       = 66000,
+		.hclk_msys  = 200000,
+		.pclk_msys  = 100000,
+		.hclk_dsys  = 166750,
+		.pclk_dsys  = 83375,
         },
 	[L2] = {	/* L2: 800MHz */
 		.fclk       = 800000,
@@ -796,7 +724,7 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 	
   switch(s3c_freqs.old.armclk) {
 #ifdef CONFIG_CPU_UV
-    case 1000000:
+    case TOPCPUFREQUENCY:
       s3c_freqs.old.hclk_msys = gpu[1][1];
       break;
     case 800000:
@@ -812,26 +740,9 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
       s3c_freqs.old.hclk_msys = gpu[5][1];
       break;
 #else
-#ifdef CONFIG_CPU_1440
-    case 1440000:
+    case TOPCPUFREQUENCY:
       s3c_freqs.old.hclk_msys = gpu[0][1];
       break;
-#endif
-#ifdef CONFIG_CPU_1400
-    case 1400000:
-      s3c_freqs.old.hclk_msys = gpu[0][1];
-      break;
-#endif
-#ifdef CONFIG_CPU_1300
-    case 1300000:
-      s3c_freqs.old.hclk_msys = gpu[0][1];
-      break;
-#endif
-#ifdef CONFIG_CPU_1200
-    case 1200000:
-      s3c_freqs.old.hclk_msys = gpu[0][1];
-      break;
-#endif
     case 1000000:
       s3c_freqs.old.hclk_msys = gpu[1][1];
       break;
