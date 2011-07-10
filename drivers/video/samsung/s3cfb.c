@@ -1125,7 +1125,7 @@ static void progress_timer_handler(unsigned long data)
 	}    
 	else    
 	{        
-		progress_timer.expires = (get_jiffies_64() + (HZ/14));         
+		progress_timer.expires = (get_jiffies_64() + (HZ/6));         
 		progress_timer.function = progress_timer_handler;         
 		add_timer(&progress_timer);    
 	}
