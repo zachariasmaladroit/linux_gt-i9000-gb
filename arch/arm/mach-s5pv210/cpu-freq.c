@@ -144,7 +144,11 @@ struct s5pv210_dvs_conf {
 
 #ifdef CONFIG_DVFS_LIMIT
 static unsigned int g_dvfs_high_lock_token = 0;
+#ifdef CONFIG_CPU_UV
 static unsigned int g_dvfs_high_lock_limit = 4;
+#else
+static unsigned int g_dvfs_high_lock_limit = 5;
+#endif
 static unsigned int g_dvfslockval[DVFS_LOCK_TOKEN_NUM];
 //static DEFINE_MUTEX(dvfs_high_lock);
 #endif
