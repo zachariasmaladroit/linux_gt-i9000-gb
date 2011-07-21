@@ -1545,6 +1545,26 @@ static void do_async_mmap_readahead(struct vm_area_struct *vma,
 					   page, offset, ra->ra_pages);
 }
 
+/*
+ * Lock the page, unless this would block and the caller indicated that it
+ * can handle a retry.
+ */
+static int lock_page_or_retry(struct page *page,
+			      struct vm_area_struct *vma, struct vm_fault *vmf)
+{
+	if (trylock_page(page))
+		return 1;
+	if (!(vmf->flags & FAULT_FLAG_ALLOW_RETRY)) {
+		__lock_page(page);
+		return 1;
+	}
+
+	up_read(&vma->vm_mm->mmap_sem);
+	wait_on_page_locked(page);
+	page_cache_release(page);
+	return 0;
+}
+
 /**
  * filemap_fault - read in file data for page fault handling
  * @vma:	vma in which the fault was taken
@@ -1583,24 +1603,27 @@ int filemap_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
 		 * waiting for the lock.
 		 */
 		do_async_mmap_readahead(vma, ra, file, page, offset);
-		lock_page(page);
-
-		/* Did it get truncated? */
-		if (unlikely(page->mapping != mapping)) {
-			unlock_page(page);
-			put_page(page);
-			goto no_cached_page;
-		}
 	} else {
 		/* No page in the page cache at all */
 		do_sync_mmap_readahead(vma, ra, file, offset);
 		count_vm_event(PGMAJFAULT);
 		ret = VM_FAULT_MAJOR;
 retry_find:
-		page = find_lock_page(mapping, offset);
+		page = find_get_page(mapping, offset);
 		if (!page)
 			goto no_cached_page;
 	}
+
+	if (!lock_page_or_retry(page, vma, vmf))
+		return ret | VM_FAULT_RETRY;
+
+	/* Did it get truncated? */
+	if (unlikely(page->mapping != mapping)) {
+		unlock_page(page);
+		put_page(page);
+		goto retry_find;
+	}
+	VM_BUG_ON(page->index != offset);
 
 	/*
 	 * We have a locked page in the page cache, now we need to check
