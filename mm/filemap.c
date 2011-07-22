@@ -1551,26 +1551,6 @@ static void do_async_mmap_readahead(struct vm_area_struct *vma,
 					   page, offset, ra->ra_pages);
 }
 
-/*
- * Lock the page, unless this would block and the caller indicated that it
- * can handle a retry.
- */
-static int lock_page_or_retry(struct page *page,
-			      struct vm_area_struct *vma, struct vm_fault *vmf)
-{
-	if (trylock_page(page))
-		return 1;
-	if (!(vmf->flags & FAULT_FLAG_ALLOW_RETRY)) {
-		__lock_page(page);
-		return 1;
-	}
-
-	up_read(&vma->vm_mm->mmap_sem);
-	wait_on_page_locked(page);
-	page_cache_release(page);
-	return 0;
-}
-
 /**
  * filemap_fault - read in file data for page fault handling
  * @vma:	vma in which the fault was taken
@@ -1620,8 +1600,7 @@ retry_find:
 			goto no_cached_page;
 	}
 
-	if (!lock_page_or_retry(page, vma, vmf))
-		return ret | VM_FAULT_RETRY;
+	lock_page(page);
 
 	/* Did it get truncated? */
 	if (unlikely(page->mapping != mapping)) {
