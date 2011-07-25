@@ -758,6 +758,7 @@ static ssize_t store_states_enabled_table(struct cpufreq_policy *policy, const c
 
 }
 
+#if defined(CONFIG_GPU_OC)
 static ssize_t show_gpu_clock_table(struct cpufreq_policy *policy, char *buf) {
  
 #ifdef CONFIG_CPU_UV
@@ -806,7 +807,7 @@ static ssize_t store_gpu_clock_table(struct cpufreq_policy *policy, const char *
     return ret;
 
 }
-
+#endif
 
 cpufreq_freq_attr_ro_perm(cpuinfo_cur_freq, 0400);
 cpufreq_freq_attr_ro(cpuinfo_min_freq);
@@ -825,7 +826,9 @@ cpufreq_freq_attr_rw(scaling_governor);
 cpufreq_freq_attr_rw(scaling_setspeed);
 cpufreq_freq_attr_rw(UV_mV_table);
 cpufreq_freq_attr_rw(states_enabled_table);
+#ifdef CONFIG_GPU_OC
 cpufreq_freq_attr_rw(gpu_clock_table);
+#endif
 
 static struct attribute *default_attrs[] = {
 	&cpuinfo_min_freq.attr,
@@ -842,7 +845,9 @@ static struct attribute *default_attrs[] = {
 	&UV_mV_table.attr,
 	&frequency_voltage_table.attr,
 	&states_enabled_table.attr,
+#ifdef CONFIG_GPU_OC
 	&gpu_clock_table.attr,
+#endif
 	NULL
 };
 

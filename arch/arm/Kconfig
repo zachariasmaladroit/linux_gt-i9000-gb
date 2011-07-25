@@ -5,6 +5,8 @@
 
 mainmenu "Linux Kernel Configuration"
 
+source "arch/arm/mach-s5pv210/Kconfig.talon"
+
 config ARM
 	bool
 	default y
