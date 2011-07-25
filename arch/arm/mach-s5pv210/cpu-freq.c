@@ -117,6 +117,7 @@ unsigned int freq_uv_table[6][3] = {
 #endif
 }; 
 
+#if defined(CONFIG_GPU_OC)
 #ifdef CONFIG_CPU_UV
 unsigned int gpu[5][2] = {
   //stock  current
@@ -136,6 +137,7 @@ unsigned int gpu[6][2] = {
   {100, 100}
 #endif
 };
+#endif
 
 struct s5pv210_dvs_conf {
 	unsigned long       arm_volt;   /* uV */
@@ -724,8 +726,8 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 	}
 	cpufreq_notify_transition(&s3c_freqs.freqs, CPUFREQ_PRECHANGE);
 
-  /* Yeah, this is hacky as fuck. So what? */
-	
+/* This is currently broken, will fix at somepoint.  */
+#if defined(CONFIG_GPU_OC)
   switch(s3c_freqs.old.armclk) {
 #ifdef CONFIG_CPU_UV
     case TOPCPUFREQUENCY:
@@ -769,6 +771,7 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 	
   s3c_freqs.old.hclk_msys *= 1000;
   s3c_freqs.new.hclk_msys = gpu[index][1]*1000;
+#endif
 
 	if (s3c_freqs.new.fclk != s3c_freqs.old.fclk || first_run)
 		pll_changing = 1;
@@ -814,7 +817,12 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 		 * that should be fixed before.
 		 */
 		reg = backup_dmc1_reg * s3c_freqs.new.hclk_msys;
+#ifdef CONFIG_GPU_OC
+	/* gpu[freq][1] is the actual hclk_msys. We want to use this in place of the static clk_info. */
+		reg /= gpu[backup_freq_level][1];
+#else
 		reg /= clk_info[backup_freq_level].hclk_msys;
+#endif
 
 		/*
 		 * When ARM_CLK is absed on APLL->MPLL,
@@ -919,8 +927,13 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 	 * then, the refresh rate should decrease
 	 * (by original refresh count * n) (n : clock rate)
 	 */
+#ifdef CONFIG_GPU_OC
+	reg = backup_dmc1_reg * gpu[index][1];
+	reg /= gpu[backup_freq_level][1];
+#else
 	reg = backup_dmc1_reg * clk_info[index].hclk_msys;
 	reg /= clk_info[backup_freq_level].hclk_msys;
+#endif
 	__raw_writel(reg & 0xFFFF, S5P_VA_DMC1 + 0x30);
 	cpufreq_notify_transition(&s3c_freqs.freqs, CPUFREQ_POSTCHANGE);
 

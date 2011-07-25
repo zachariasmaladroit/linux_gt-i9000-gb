@@ -173,12 +173,6 @@ config ARIES_LATONA
 	help
 	Select S1 LATONA
 
-config GALAXY_I897
-       bool "select Captivate"
-       depends on ARIES_EUR
-       help
-       Captivate specific settings
-
 config S5PV210_SETUP_FB
 	bool
 	depends on FB_S3C
@@ -237,37 +231,3 @@ config CPU_DIDLE
 	default y
 
 endif
-
-comment "Talon Kernel Settings"
-choice
-	prompt "Frequency Choices"
-	default CPU_1200
-
-config CPU_1440
-       bool "1440mhz Overclock"
-
-config CPU_1400
-       bool "1400mhz Overclock"
-
-config CPU_1300
-       bool "1300mhz Overclock"
-
-config CPU_1200
-       bool "1200mhz Overclock"
-
-config CPU_UV
-       bool "1000mhz No-OC"
-
-endchoice
-
-config S5P_BIGMEM
-       bool "select Bigmem memory config"
-       default n
-       help 
-         Enable 353MB memory config. Breaks 720p recording
-
-config DISABLE_PRINTK
-       bool "Disable Printk in Kernel"
-       depends on EXPERIMENTAL
-       help
-         Disable printk completely in the kernel to reduce overhead
