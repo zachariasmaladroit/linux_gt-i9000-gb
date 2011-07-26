@@ -7,7 +7,7 @@
 /bin/rm -r /voodoo/root/usr/*
 /bin/rm /lib/*.0
 /bin/rm /lib/*.so
-/bin/rm -r /sbin
+#/bin/rm -r /sbin
 /bin/rm /.gitignore
 
 /bin/mount -o remount,ro /
