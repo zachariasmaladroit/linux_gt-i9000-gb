@@ -6,7 +6,7 @@ if ! [ -e .config ]; then
  make $1
 fi
 
-export KBUILD_BUILD_VERSION="snail12_t7"
+export KBUILD_BUILD_VERSION="snail12_t8"
 
 #export LOCALVERSION="-I9000XWJVB-CL118186"
 #export LOCALVERSION="-I9000XWJVH-CL184813"
