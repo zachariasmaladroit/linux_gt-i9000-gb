@@ -1993,6 +1993,11 @@ int init_ap_profile_from_string(char *param_str, struct ap_profile *ap_cfg)
 	char *str_ptr = param_str;
 	char sub_cmd[16];
 	int ret = 0;
+	/************************************************************************
+	 * Samsung patch for ssid including ',' [PLM P110518-4075] 2011.05.18
+	 ************************************************************************/
+	int j=0;
+	/************************************************************************/	
 
 	memset(sub_cmd, 0, sizeof(sub_cmd));
 	memset(ap_cfg, 0, sizeof(struct ap_profile));
@@ -2010,6 +2015,15 @@ int init_ap_profile_from_string(char *param_str, struct ap_profile *ap_cfg)
 	
 	
 	ret = get_parmeter_from_string(&str_ptr, "SSID=", PTYPE_STRING, ap_cfg->ssid, SSID_LEN);
+	/************************************************************************
+	 * Samsung patch for ssid including ',' [PLM P110518-4075] 2011.05.18
+	 ************************************************************************/
+	for(j=0;j<strlen(ap_cfg->ssid);j++)
+	{
+		if(ap_cfg->ssid[j]== (','-40) || ap_cfg->ssid[j]==('='-40))
+			ap_cfg->ssid[j]+=40;
+	}
+	/************************************************************************/	
 
 	ret |= get_parmeter_from_string(&str_ptr, "SEC=", PTYPE_STRING,  ap_cfg->sec, SEC_LEN);
 
@@ -2018,13 +2032,13 @@ int init_ap_profile_from_string(char *param_str, struct ap_profile *ap_cfg)
 	ret |= get_parmeter_from_string(&str_ptr, "CHANNEL=", PTYPE_INTDEC, &ap_cfg->channel, 5);
 
 
-	get_parmeter_from_string(&str_ptr, "PREAMBLE=", PTYPE_INTDEC, &ap_cfg->preamble, 5);
+	ret |= get_parmeter_from_string(&str_ptr, "PREAMBLE=", PTYPE_INTDEC, &ap_cfg->preamble, 5);
 
 	
-	get_parmeter_from_string(&str_ptr, "MAX_SCB=", PTYPE_INTDEC,  &ap_cfg->max_scb, 5);
+	ret |= get_parmeter_from_string(&str_ptr, "MAX_SCB=", PTYPE_INTDEC,  &ap_cfg->max_scb, 5);
 
 	
-	get_parmeter_from_string(&str_ptr, "HIDDEN=",
+	ret |= get_parmeter_from_string(&str_ptr, "HIDE=",
 		PTYPE_INTDEC,  &ap_cfg->closednet, 5);
 
 	
