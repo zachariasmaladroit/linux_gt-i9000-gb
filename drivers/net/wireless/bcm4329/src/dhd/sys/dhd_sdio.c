@@ -1869,7 +1869,7 @@ dhdsdio_checkdied(dhd_bus_t *bus, uint8 *data, uint size)
 		DHD_ERROR(("%s: %s\n", __FUNCTION__, strbuf.origbuf));
 	}
 
-#if 0
+#ifdef DHD_DEBUG
 	if (sdpcm_shared.flags & SDPCM_SHARED_TRAP) {
 		/* Mem dump to a file on device */
 		dhdsdio_mem_dump(bus);
