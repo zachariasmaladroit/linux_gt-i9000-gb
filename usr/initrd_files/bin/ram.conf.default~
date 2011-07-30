@@ -6,13 +6,13 @@ RAM_CONF_VERSION=5.6 # Do not edit this
 # compressed ram swap) settings, and kernel VM settings
 
 # Kernel VM settings
-VFS_CACHE_PRESSURE=20
-DIRTY_RATIO=80
-DIRTY_BACKGROUND_RATIO=5
-DIRTY_EXPIRE_CENTISECS=700
-DIRTY_WRITEBACK_CENTISECS=500
+#VFS_CACHE_PRESSURE=100                     
+#DIRTY_RATIO=20                                
+#DIRTY_BACKGROUND_RATIO=5                   
+#DIRTY_EXPIRE_CENTISECS=200                     
+#DIRTY_WRITEBACK_CENTISECS=500                   
 #MIN_FREE_ORDER_SHIFT=4
-PAGE_CLUSTER=12
+#PAGE_CLUSTER=0 
 
 # LMK/ZRAM settings
 FOREGROUND_APP_ADJ=0
