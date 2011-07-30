@@ -45,7 +45,6 @@
 #include <mach/param.h>
 #include <mach/system.h>
 #include <mach/sec_switch.h>
-#include <mach/voltages.h>
 
 #include <linux/usb/gadget.h>
 #include <linux/fsa9480.h>
@@ -901,13 +900,8 @@ static struct max8998_platform_data max8998_pdata = {
 	.buck1_set1		= GPIO_BUCK_1_EN_A,
 	.buck1_set2		= GPIO_BUCK_1_EN_B,
 	.buck2_set3		= GPIO_BUCK_2_EN,
-#ifdef CONFIG_CPU_UV
-	.buck1_voltage_set	= { DVSARM1, DVSARM2, DVSARM3, DVSARM4 },
-	.buck2_voltage_set	= { DVSINT1, DVSINT2 },
-#else
-	.buck1_voltage_set	= { DVSARM1, DVSARM2, DVSARM3, DVSARM4, DVSARM5 },
-	.buck2_voltage_set	= { DVSINT1, DVSINT2, DVSINT3 },
-#endif
+	.buck1_voltage_set	= { 1275000, 1200000, 1050000, 950000 },
+	.buck2_voltage_set	= { 1100000, 1000000 },
 };
 
 struct platform_device sec_device_dpram = {
