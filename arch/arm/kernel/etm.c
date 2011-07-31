@@ -230,7 +230,7 @@ static void etm_dump(void)
 	etb_lock(t);
 }
 
-static void sysrq_etm_dump(int key)
+static void sysrq_etm_dump(int key, struct tty_struct *tty)
 {
 	dev_dbg(tracer.dev, "Dumping ETB buffer\n");
 	etm_dump();
