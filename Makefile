@@ -190,8 +190,8 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
 export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH		?= arm
 #CROSS_COMPILE	?= /home/existz/src/CodeSourcery/bin/arm-none-eabi-
-CROSS_COMPILE	?= /opt/toolchains/arm-2011.03/bin/arm-none-linux-gnueabi-
-#CROSS_COMPILE	?= /opt/toolchains/arm-2009q3_arm/bin/arm-none-eabi-
+#CROSS_COMPILE	?= /opt/toolchains/arm-2011.03/bin/arm-none-linux-gnueabi-
+CROSS_COMPILE	?= /opt/toolchains/arm-2009q3_arm/bin/arm-none-eabi-
 
 
 # Architecture as present in compile.h
@@ -355,10 +355,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks \
-		   --param l2-cache-size=256 --param l1-cache-size=16 --param simultaneous-prefetches=8 --param prefetch-latency=200 --param l1-cache-line-size=32 \
-		   -fsched-spec-load-dangerous -fpredictive-commoning \
-		   -fira-coalesce -funswitch-loops -ftree-loop-im -fipa-cp-clone -fivopts
+		   -fno-delete-null-pointer-checks
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
