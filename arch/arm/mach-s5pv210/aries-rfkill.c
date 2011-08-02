@@ -57,39 +57,11 @@ static struct wake_lock bt_wake_lock;
 static struct rfkill *bt_sleep_rfk;
 #endif /* BT_SLEEP_ENABLE */
 
-volatile int bt_is_running = 0;
-EXPORT_SYMBOL(bt_is_running);
-
 #ifdef USE_LOCK_DVFS
 static struct rfkill *bt_lock_dvfs_rfk;
 static struct rfkill *bt_lock_dvfs_l2_rfk;
 #include <mach/cpu-freq-v210.h>
 #endif
-
-void bt_uart_rts_ctrl(int flag)
-{
-	if(!gpio_get_value(GPIO_BT_nRST))
-		return;
-
-	if(flag) {
-		// BT RTS Set to HIGH
-		s3c_gpio_cfgpin(S5PV210_GPA0(3), S3C_GPIO_OUTPUT);
-		s3c_gpio_setpull(S5PV210_GPA0(3), S3C_GPIO_PULL_NONE);
-		gpio_set_value(S5PV210_GPA0(3), 1);
-
-                s3c_gpio_slp_cfgpin(S5PV210_GPA0(3), S3C_GPIO_SLP_OUT0);
-		s3c_gpio_slp_setpull_updown(S5PV210_GPA0(3), S3C_GPIO_PULL_NONE);
-	}
-	else {
-		// BT RTS Set to LOW
-		s3c_gpio_cfgpin(S5PV210_GPA0(3), S3C_GPIO_OUTPUT);
-		gpio_set_value(S5PV210_GPA0(3), 0);
-
-		s3c_gpio_cfgpin(S5PV210_GPA0(3), S3C_GPIO_SFN(2));
-		s3c_gpio_setpull(S5PV210_GPA0(3), S3C_GPIO_PULL_NONE);
-	}
-}
-EXPORT_SYMBOL(bt_uart_rts_ctrl);
 
 static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 {
@@ -105,8 +77,8 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 
 		s3c_setup_uart_cfg_gpio(0);
 
-		if (gpio_is_valid(GPIO_WLAN_BT_EN))
-			gpio_direction_output(GPIO_WLAN_BT_EN, GPIO_LEVEL_HIGH);
+		if (gpio_is_valid(GPIO_BT_EN))
+			gpio_direction_output(GPIO_BT_EN, GPIO_LEVEL_HIGH);
 
 		if (gpio_is_valid(GPIO_BT_nRST))
 			gpio_direction_output(GPIO_BT_nRST, GPIO_LEVEL_LOW);
@@ -115,15 +87,15 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 				gpio_get_value(GPIO_BT_nRST));
 
 		/* Set GPIO_BT_WLAN_REG_ON high */
-		s3c_gpio_setpull(GPIO_WLAN_BT_EN, S3C_GPIO_PULL_NONE);
-		gpio_set_value(GPIO_WLAN_BT_EN, GPIO_LEVEL_HIGH);
+		s3c_gpio_setpull(GPIO_BT_EN, S3C_GPIO_PULL_NONE);
+		gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_HIGH);
 
-		s3c_gpio_slp_cfgpin(GPIO_WLAN_BT_EN, S3C_GPIO_SLP_OUT1);
-		s3c_gpio_slp_setpull_updown(GPIO_WLAN_BT_EN,
+		s3c_gpio_slp_cfgpin(GPIO_BT_EN, S3C_GPIO_SLP_OUT1);
+		s3c_gpio_slp_setpull_updown(GPIO_BT_EN,
 				S3C_GPIO_PULL_NONE);
 
-		pr_debug("[BT] GPIO_WLAN_BT_EN = %d\n",
-				gpio_get_value(GPIO_WLAN_BT_EN));
+		pr_debug("[BT] GPIO_BT_EN = %d\n",
+				gpio_get_value(GPIO_BT_EN));
 		/*
 		 * FIXME sleep should be enabled disabled since the device is
 		 * not booting if its enabled
@@ -160,8 +132,6 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 	case RFKILL_USER_STATE_SOFT_BLOCKED:
 		pr_debug("[BT] Device Powering OFF\n");
 
-		bt_is_running = 0;
-
 		ret = disable_irq_wake(irq);
 		if (ret < 0)
 			pr_err("[BT] unset wakeup src failed\n");
@@ -178,17 +148,15 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 		pr_debug("[BT] GPIO_BT_nRST = %d\n",
 				gpio_get_value(GPIO_BT_nRST));
 
-		if (gpio_get_value(GPIO_WLAN_nRST) == 0) {
-			s3c_gpio_setpull(GPIO_WLAN_BT_EN, S3C_GPIO_PULL_NONE);
-			gpio_set_value(GPIO_WLAN_BT_EN, GPIO_LEVEL_LOW);
+			s3c_gpio_setpull(GPIO_BT_EN, S3C_GPIO_PULL_NONE);
+			gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_LOW);
 
-			s3c_gpio_slp_cfgpin(GPIO_WLAN_BT_EN, S3C_GPIO_SLP_OUT0);
-			s3c_gpio_slp_setpull_updown(GPIO_WLAN_BT_EN,
+			s3c_gpio_slp_cfgpin(GPIO_BT_EN, S3C_GPIO_SLP_OUT0);
+			s3c_gpio_slp_setpull_updown(GPIO_BT_EN,
 					S3C_GPIO_PULL_NONE);
 
-			pr_debug("[BT] GPIO_WLAN_BT_EN = %d\n",
-					gpio_get_value(GPIO_WLAN_BT_EN));
-		}
+			pr_debug("[BT] GPIO_BT_EN = %d\n",
+					gpio_get_value(GPIO_BT_EN));
 		break;
 
 	default:
@@ -201,8 +169,6 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 irqreturn_t bt_host_wake_irq_handler(int irq, void *dev_id)
 {
 	pr_debug("[BT] bt_host_wake_irq_handler start\n");
-
-	bt_is_running = 1;
 
 	wake_lock_timeout(&rfkill_wake_lock, 5*HZ);
 
@@ -230,7 +196,6 @@ static int bluetooth_set_sleep(void *data, enum rfkill_user_states state)
 	switch (state) {
 
 		case RFKILL_USER_STATE_UNBLOCKED:
-			bt_is_running = 0;
 			gpio_set_value(GPIO_BT_WAKE, 0);
 			pr_debug("[BT] GPIO_BT_WAKE = %d\n", gpio_get_value(GPIO_BT_WAKE) );
 			pr_debug("[BT] wake_unlock(bt_wake_lock)\n");
@@ -238,7 +203,6 @@ static int bluetooth_set_sleep(void *data, enum rfkill_user_states state)
 			break;
 
 		case RFKILL_USER_STATE_SOFT_BLOCKED:
-			bt_is_running = 1;
 			gpio_set_value(GPIO_BT_WAKE, 1);
 			pr_debug("[BT] GPIO_BT_WAKE = %d\n", gpio_get_value(GPIO_BT_WAKE) );
 			pr_debug("[BT] wake_lock(bt_wake_lock)\n");
@@ -334,10 +298,10 @@ static int __init aries_rfkill_probe(struct platform_device *pdev)
 	/* Initialize wake locks */
 	wake_lock_init(&rfkill_wake_lock, WAKE_LOCK_SUSPEND, "bt_host_wake");
 
-	ret = gpio_request(GPIO_WLAN_BT_EN, "GPB");
+	ret = gpio_request(GPIO_BT_EN, "GPB");
 	if (ret < 0) {
-		pr_err("[BT] Failed to request GPIO_WLAN_BT_EN!\n");
-		goto err_req_gpio_wlan_bt_en;
+		pr_err("[BT] Failed to request GPIO_BT_EN!\n");
+		goto err_req_gpio_bt_en;
 	}
 
 	ret = gpio_request(GPIO_BT_nRST, "GPB");
@@ -485,9 +449,9 @@ err_req_gpio_bt_wake:
 	gpio_free(GPIO_BT_nRST);
 
  err_req_gpio_bt_nrst:
-	gpio_free(GPIO_WLAN_BT_EN);
+	gpio_free(GPIO_BT_EN);
 
- err_req_gpio_wlan_bt_en:
+ err_req_gpio_bt_en:
 	return ret;
 }
 
@@ -503,8 +467,6 @@ static int __init aries_rfkill_init(void)
 {
 	int rc = 0;
 	rc = platform_driver_register(&aries_device_rfkill);
-
-	bt_is_running = 0;
 
 	return rc;
 }

@@ -359,10 +359,6 @@ skipped_didle:
 	__raw_writel(vic_regs[3], S5P_VIC3REG(VIC_INT_ENABLE));
 }
 
-#ifdef CONFIG_RFKILL
-extern volatile int bt_is_running;
-#endif
-
 static int s5p_idle_bm_check(void)
 {
 	if (check_power_clock_gating()	|| loop_sdmmc_check() ||
@@ -372,14 +368,9 @@ static int s5p_idle_bm_check(void)
 	else if (check_idmapos())
 		return 1;
 #endif
-#ifdef CONFIG_RFKILL
-	else if (bt_is_running)
-		return 1;
-#endif
 	else
 		return 0;
 }
-extern void bt_uart_rts_ctrl(int flag);
 
 /* Actual code that puts the SoC in different idle states */
 static int s5p_enter_didle_state(struct cpuidle_device *dev,
@@ -387,11 +378,6 @@ static int s5p_enter_didle_state(struct cpuidle_device *dev,
 {
 	struct timeval before, after;
 	int idle_time;
-
-#ifdef CONFIG_RFKILL
-	/* BT-UART RTS Control (RTS High) */
-	bt_uart_rts_ctrl(1);
-#endif
 
 	local_irq_disable();
 	do_gettimeofday(&before);
@@ -401,12 +387,6 @@ static int s5p_enter_didle_state(struct cpuidle_device *dev,
 	local_irq_enable();
 	idle_time = (after.tv_sec - before.tv_sec) * USEC_PER_SEC +
 			(after.tv_usec - before.tv_usec);
-
-#ifdef CONFIG_RFKILL
-	/* BT-UART RTS Control (RTS Low) */
-	bt_uart_rts_ctrl(0);
-#endif
-
 	return idle_time;
 }
 
@@ -419,8 +399,9 @@ static int s5p_enter_idle_bm(struct cpuidle_device *dev,
 	else
 		return s5p_enter_didle_state(dev, state);
 #else
-	return s5p_enter_idle_state(dev, state);
+		return s5p_enter_idle_state(dev, state);
 #endif
+
 }
 
 static DEFINE_PER_CPU(struct cpuidle_device, s5p_cpuidle_device);
