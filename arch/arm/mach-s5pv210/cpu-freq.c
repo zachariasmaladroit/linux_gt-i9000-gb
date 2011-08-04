@@ -703,7 +703,6 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 		exp_UV_mV[index] = -50;
 
 	arm_volt = (dvs_conf[index].arm_volt - (exp_UV_mV[index]*1000));
-	//freq_uv_table[index][2] = (int) arm_volt / 1000;
 	int_volt = dvs_conf[index].int_volt;
 
 	/* New clock information update */
@@ -731,19 +730,19 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
   switch(s3c_freqs.old.armclk) {
 #ifdef CONFIG_CPU_UV
     case TOPCPUFREQUENCY:
-      s3c_freqs.old.hclk_msys = gpu[1][1];
+      s3c_freqs.old.hclk_msys = gpu[0][1];
       break;
     case 800000:
-      s3c_freqs.old.hclk_msys = gpu[2][1];
+      s3c_freqs.old.hclk_msys = gpu[1][1];
       break;
     case 400000:
-      s3c_freqs.old.hclk_msys = gpu[3][1];
+      s3c_freqs.old.hclk_msys = gpu[2][1];
       break;
     case 200000:
-      s3c_freqs.old.hclk_msys = gpu[4][1];
+      s3c_freqs.old.hclk_msys = gpu[3][1];
       break;
     case 100000:
-      s3c_freqs.old.hclk_msys = gpu[5][1];
+      s3c_freqs.old.hclk_msys = gpu[4][1];
       break;
 #else
     case TOPCPUFREQUENCY:
@@ -956,7 +955,6 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 		exp_UV_mV[index] = -50;
 
 	previous_arm_volt = (dvs_conf[index].arm_volt - (exp_UV_mV[index]*1000));
-	//freq_uv_table[index][2] = (int) previous_arm_volt / 1000;
 
 	if (first_run)
 		first_run = false;
@@ -1008,7 +1006,6 @@ static int s5pv210_cpufreq_resume(struct cpufreq_policy *policy)
 		exp_UV_mV[level] = -50;
 
 	previous_arm_volt = (dvs_conf[level].arm_volt - (exp_UV_mV[level]*1000));
-	//freq_uv_table[level][2] = (int) previous_arm_volt / 1000;
 
 	return ret;
 }
@@ -1076,7 +1073,7 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 			apll_freq_max = clk_info[index].fclk;
 		i++;
 	} while (freq_table[i].frequency != CPUFREQ_TABLE_END);
-	apll_freq_max /= 1000; /* in MHz */
+	apll_freq_max /= APLLMX; /* in MHz */
 
 	memcpy(&s3c_freqs.old, &clk_info[level],
 			sizeof(struct s3c_freq));
@@ -1085,7 +1082,6 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 		exp_UV_mV[level] = -50;
 
 	previous_arm_volt = (dvs_conf[level].arm_volt - (exp_UV_mV[level]*1000));
-	//freq_uv_table[level][2] = (int) previous_arm_volt / 1000;
 
 #ifdef CONFIG_DVFS_LIMIT
 	for(i = 0; i < DVFS_LOCK_TOKEN_NUM; i++)
