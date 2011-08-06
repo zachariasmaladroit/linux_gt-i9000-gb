@@ -25,6 +25,7 @@
 
 #include <linux/regulator/machine.h>
 
+
 /* MAX 8998 regulator ids */
 enum {
 	MAX8998_LDO2 = 2,
@@ -54,6 +55,10 @@ enum {
 	MAX8998_ESAFEOUT2,
 };
 
+typedef enum {
+	LDO3_USB,
+	LDO3_MIPI,
+} ldo3_sts;
 /**
  * max8998_regulator_data - regulator data
  * @id: regulator id
