@@ -6,6 +6,9 @@ if ! [ -e .config ]; then
  make $1
 fi
 
+# Linaro Android 4.6 (GCC 4.6.2) Toolchain - http://www.linaro.org
+export CROSS_COMPILE="/opt/toolchains/android-toolchain-eabi/bin/arm-eabi-"
+
 export KBUILD_BUILD_VERSION="0.4.3-talon-dev"
 
 #export LOCALVERSION="-I9000XWJVB-CL118186"
