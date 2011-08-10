@@ -444,7 +444,7 @@ swp_entry_t get_swap_page(void)
 	int wrapped = 0;
 
 	spin_lock(&swap_lock);
-	if (nr_swap_pages <= 0)
+	if (unlikely(nr_swap_pages <= 0))
 		goto noswap;
 	nr_swap_pages--;
 
