@@ -64,7 +64,6 @@
 #define GPIO_BOOT_MODE			S5PV210_GPB(4)
 
 #define GPIO_WLAN_BT_EN			S5PV210_GPB(5)
-#define GPIO_BT_EN			S5PV210_GPB(5)
 
 #define GPIO_GPB6			S5PV210_GPB(6)
 
