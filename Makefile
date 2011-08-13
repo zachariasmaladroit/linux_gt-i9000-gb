@@ -354,7 +354,9 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
-                  -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp
+		   -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp \
+		   --param l2-cache-size=256 --param l1-cache-size=16 --param simultaneous-prefetches=8 --param prefetch-latency=200 --param l1-cache-line-size=32 \
+		   -floop-interchange -floop-strip-mine -floop-block
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
@@ -533,7 +535,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -O3
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
