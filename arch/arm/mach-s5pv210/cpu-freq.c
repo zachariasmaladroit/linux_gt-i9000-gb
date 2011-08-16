@@ -53,21 +53,7 @@ static DEFINE_MUTEX(set_freq_lock);
 
 /* frequency */
 static struct cpufreq_frequency_table freq_table[] = {
-#ifdef CONFIG_CPU_UV
-        {L0, 1000*1000},
-#endif
-#ifdef CONFIG_CPU_1200
-        {L0, 1200*1000},
-#endif
-#ifdef CONFIG_CPU_1300
-        {L0, 1300*1000},
-#endif
-#ifdef CONFIG_CPU_1400
-	{L0, 1400*1000},
-#endif
-#ifdef CONFIG_CPU_1440
-        {L0, 1440*1000},
-#endif
+        {L0, FREQMAX*1000},
         {L1, 800*1000},
         {L2, 400*1000},
         {L3, 200*1000},
@@ -818,7 +804,7 @@ static int s5pv210_cpufreq_resume(struct cpufreq_policy *policy)
 
 	if (level == CPUFREQ_TABLE_END) { /* Not found */
 		pr_err("[%s:%d] clock speed does not match: "
-				"%d. Using L2 of 800MHz.\n",
+				"%d. Using L1 of 800MHz.\n",
 				__FILE__, __LINE__, rate);
 		level = L1;
 
@@ -876,7 +862,7 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 
 	if (level == CPUFREQ_TABLE_END) { /* Not found */
 		pr_err("[%s:%d] clock speed does not match: "
-				"%d. Using L2 of 800MHz.\n",
+				"%d. Using L1 of 800MHz.\n",
 				__FILE__, __LINE__, rate);
 		level = L1;
 	}
@@ -894,7 +880,7 @@ static int __init s5pv210_cpufreq_driver_init(struct cpufreq_policy *policy)
 			apll_freq_max = clk_info[index].fclk;
 		i++;
 	} while (freq_table[i].frequency != CPUFREQ_TABLE_END);
-	apll_freq_max /= APLLMX; /* in MHz */
+	apll_freq_max /= FREQMAX; /* in MHz */
 
 	memcpy(&s3c_freqs.old, &clk_info[level],
 			sizeof(struct s3c_freq));
