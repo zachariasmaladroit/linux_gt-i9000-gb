@@ -211,8 +211,8 @@ static void handle_uncompressed_page(struct zram *zram,
 			zram->table[index].offset;
 
 	memcpy(user_mem, cmem, PAGE_SIZE);
-	kunmap_atomic(user_mem, KM_USER0);
 	kunmap_atomic(cmem, KM_USER1);
+	kunmap_atomic(user_mem, KM_USER0);
 
 	flush_dcache_page(page);
 }
@@ -269,8 +269,8 @@ static int zram_read(struct zram *zram, struct bio *bio)
 			xv_get_object_size(cmem) - sizeof(*zheader),
 			user_mem, &clen);
 
-		kunmap_atomic(user_mem, KM_USER0);
 		kunmap_atomic(cmem, KM_USER1);
+		kunmap_atomic(user_mem, KM_USER0);
 
 		/* Should NEVER happen. Return bio error if it does. */
 		if (unlikely(ret != LZO_E_OK)) {
