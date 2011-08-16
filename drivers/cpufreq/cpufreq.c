@@ -35,7 +35,9 @@
 int exp_UV_mV[5];
 extern unsigned int freq_uv_table[5][3];
 int enabled_freqs[5] = { 1, 1, 1, 1, 1 };
+#ifdef CONFIG_GPU_OC
 extern unsigned int gpu[5][2];
+#endif
 
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
@@ -653,16 +655,16 @@ static ssize_t show_scaling_setspeed(struct cpufreq_policy *policy, char *buf)
  */
 
 static ssize_t show_UV_mV_table(struct cpufreq_policy *policy, char *buf) {
-
 	return sprintf(buf, "%d %d %d %d %d\n", exp_UV_mV[0], exp_UV_mV[1], exp_UV_mV[2], exp_UV_mV[3], exp_UV_mV[4]);
+
 }
 
 static ssize_t store_UV_mV_table(struct cpufreq_policy *policy,
 					const char *buf, size_t count) {
-
 	unsigned int ret = -EINVAL;
 
 	ret = sscanf(buf, "%d %d %d %d %d", &exp_UV_mV[0], &exp_UV_mV[1], &exp_UV_mV[2], &exp_UV_mV[3], &exp_UV_mV[4]);
+
 	if(ret != 1) {
 		return -EINVAL;
 	}
@@ -672,7 +674,6 @@ static ssize_t store_UV_mV_table(struct cpufreq_policy *policy,
 
 static ssize_t show_frequency_voltage_table(struct cpufreq_policy *policy,
 						char *buf) {
-	
 	return sprintf(buf,
 	"%d %d %d\n%d %d %d\n%d %d %d\n%d %d %d\n%d %d %d\n",
 	freq_uv_table[0][0], freq_uv_table[0][1], freq_uv_table[0][2],
@@ -706,18 +707,14 @@ static ssize_t show_states_enabled_table(struct cpufreq_policy *policy, char *bu
 }
 
 static ssize_t store_states_enabled_table(struct cpufreq_policy *policy, const char *buf, int count) {
-
-
 	unsigned int ret = -EINVAL;
 
 	ret = sscanf(buf, "%d %d %d %d %d", &enabled_freqs[0], &enabled_freqs[1], &enabled_freqs[2], &enabled_freqs[3], &enabled_freqs[4]);
-
 	if(ret != 1) {
 		return -EINVAL;
 	}
 	else
 		return count;
-
 }
 
 #if defined(CONFIG_GPU_OC)
