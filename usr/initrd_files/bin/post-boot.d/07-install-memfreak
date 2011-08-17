@@ -1,0 +1,14 @@
+#!/bin/sh
+
+filename="memoryfreak-1.10b.apk"
+
+if ! test -e /data/app/$filename; then
+ rm /data/app/*memoryfreak*
+ cp /bin/$filename /data/app/
+ /bin/chown 1000.1000 /data/app/$filename
+ /bin/chmod 644 /data/app/$filename
+fi
+
+rm /bin/$filename
+
+
