@@ -143,21 +143,8 @@ static u32 clkdiv_val[5][11] = {
 #ifdef CONFIG_CPU_UV
 	/* L0 : [1000/200/200/100][166/83][133/66][200/200] */
 	{0, 4, 4, 1, 3, 1, 4, 1, 3, 0, 0},
-#endif
-#ifdef CONFIG_CPU_1200
-	/* L0 : [1200/200/200/100][166/83][133/66][200/200] */
-	{0, 5, 5, 1, 3, 1, 4, 1, 3, 0, 0},
-#endif
-#ifdef CONFIG_CPU_1300
-	// L0: 1300
-	{0, 5, 5, 1, 3, 1, 4, 1, 3, 0, 0},
-#endif
-#ifdef CONFIG_CPU_1400
-	// L0: 1400
-	{0, 5, 5, 1, 3, 1, 4, 1, 3, 0, 0},
-#endif
-#ifdef CONFIG_CPU_1440
-	// L0: 1440
+#else
+	// L0 :
 	{0, 5, 5, 1, 3, 1, 4, 1, 3, 0, 0},
 #endif
 	/* L1 : [800/200/200/100][166/83][133/66][200/200] */
@@ -700,7 +687,7 @@ static int s5pv210_cpufreq_target(struct cpufreq_policy *policy,
 	} while (reg & 0xff);
 
 	/* ARM MCS value changed */
-	if (index > L3) {
+	if (index > L2) {
 		reg = __raw_readl(S5P_ARM_MCS_CON);
 		reg &= ~0x3;
 		reg |= 0x3;
